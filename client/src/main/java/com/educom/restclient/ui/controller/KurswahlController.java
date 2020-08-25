@@ -70,14 +70,14 @@ public class KurswahlController implements Initializable {
     }
 
     private void deleteClient(Long id) {
-        kursClient = new KursClient(restTemplate);
+        kursClient = new KursClient();
         kursClient.delete(id);
         getAllKurs();
         fillTableview();
     }
 
     private void findBy(String param) {
-        kursClient = new KursClient(restTemplate);
+        kursClient = new KursClient();
         if (rbtKursName1.isSelected()) {
             list = kursClient.findByName(param);
 

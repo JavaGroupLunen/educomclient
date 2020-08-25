@@ -31,14 +31,11 @@ public class StageInitializer implements ApplicationListener<StockChartApplicati
 
         try {
             Stage stage = stageReadyEvent.getStage();
-            //
             stage.initStyle(StageStyle.UNDECORATED);
             FXMLLoader fxmlLoader = new FXMLLoader(getChartResource().getURL());
             fxmlLoader.setControllerFactory(aClass -> this.applicationContext.getBean(aClass));
             Parent load = fxmlLoader.load();
-
             Scene scene=new Scene(load, 1200, 600);
-
             scene.getStylesheets().add("/ui.css");
             stage.setScene(scene);
             stage.setTitle(applicationTitle);

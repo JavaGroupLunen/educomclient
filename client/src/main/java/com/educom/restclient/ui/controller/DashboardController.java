@@ -16,7 +16,7 @@ import java.util.ResourceBundle;
 @Component
 public class DashboardController implements Initializable {
     @FXML
-    private AnchorPane rootPane;
+    private AnchorPane rootPane,anpLogin;
 
 
     private void loadStage(String fxml) {
@@ -54,7 +54,7 @@ public class DashboardController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-
+        loadStage("/login.fxml");
     }
     @FXML
     private void singoutHandle() throws IOException, URISyntaxException {

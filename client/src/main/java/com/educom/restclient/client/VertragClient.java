@@ -1,7 +1,10 @@
 package com.educom.restclient.client;
 
 import com.educom.restclient.model.Vertrag;
+import com.educom.restclient.ui.controller.LoginController;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestTemplate;
 
@@ -9,7 +12,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.*;
 
-public class VertragClient  {
+public class VertragClient implements HttpService<Vertrag> {
     static final String URL_UPDATE_Vertrag = "http://localhost:8082/api/vertrag/updatevertrag/{id}";
     static final String URL_FINDBYLASTNAME = "http://localhost:8082/api/vertrag/findByLastName/{lastname}";
     static final String URL_FINDBYFIRSNAME = "http://localhost:8082/api/vertrag/findByName/{firstname}";
@@ -38,6 +41,10 @@ public class VertragClient  {
         return "removed";
     }
 
+    @Override
+    public List<Vertrag> findByName(String name) {
+        return null;
+    }
 
 
     public List<Vertrag> findByDatum(Date vertragDatum) {
@@ -63,7 +70,7 @@ public class VertragClient  {
     }
 
 
-    public ResponseEntity<String> add(Vertrag vertrag) {
+    public String add(Vertrag vertrag) {
         RestTemplate restTemplate = new RestTemplate();
 
         URI uri = null;
@@ -74,18 +81,32 @@ public class VertragClient  {
             e.printStackTrace();
         }
         System.out.println(vertrag);
-        ResponseEntity<String> result = restTemplate.postForEntity(uri, vertrag, String.class);
-        return result;
+  //      ResponseEntity<Vertrag> result = restTemplate.postForEntity(uri, vertrag, String.class);
+        //return result;
+        return null;
     }
 
 
 
     public List<Vertrag> getAllVertrag() {
         final String uri = URL_VertragLIST;
+
         ResponseEntity<List<Vertrag>> Vertraglist = restTemplate.getForObject(uri,
                 ResponseEntity.class
         );
         return  Vertraglist.getBody();
+    }
+
+    @Override
+    public HttpHeaders getHeader() {
+
+        HttpHeaders headers = new HttpHeaders();
+        String authHeader = "Bearer " + LoginController.authenticationText;
+        headers.set(HttpHeaders.AUTHORIZATION, authHeader);
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
+        headers.setAccept(Arrays.asList(new MediaType[] { MediaType.APPLICATION_JSON }));
+        return headers;
     }
 
 }

@@ -1,7 +1,7 @@
 package com.educom.restclient.ui.controller;
 
 
-import com.educom.restclient.client.RestTemplateClient;
+import com.educom.restclient.client.LehreClient;
 import com.educom.restclient.client.WebClientStockClient;
 import com.educom.restclient.model.Lehre;
 import com.educom.restclient.util.ActionButtonTableCell;
@@ -53,7 +53,7 @@ public class LehreController implements Initializable {
     private void addAction() throws IOException, URISyntaxException {
 
         Lehre lehre = new Lehre(tfFirstName.getText(), tfLastName.getText(), tfEmail.getText());
-        Integer codeValue = new WebClientStockClient(webClient).saveLehre(lehre).getStatusCodeValue();
+        String codeValue = new WebClientStockClient(webClient).saveLehre(lehre);
         System.out.println(codeValue);
         getAllLehre();
         fillTableview();
@@ -67,7 +67,7 @@ public class LehreController implements Initializable {
         updatedLehre.setLastName(tfLastName.getText());
         updatedLehre.setFirstName(tfFirstName.getText());
         updatedLehre.setEmail(tfEmail.getText());
-        RestTemplateClient restClientTemplate = new RestTemplateClient(restTemplate);
+        LehreClient restClientTemplate = new LehreClient(restTemplate);
         restClientTemplate.updateLehre(getUpdatedLehreId(),updatedLehre);
         getAllLehre();
         fillTableview();
@@ -90,14 +90,14 @@ public class LehreController implements Initializable {
     }
 
     private void deleteClient(Lehre lehre) {
-        RestTemplateClient restClientTemplate = new RestTemplateClient(restTemplate);
-        restClientTemplate.deleteEmployee(lehre);
+        LehreClient restClientTemplate = new LehreClient(restTemplate);
+        restClientTemplate.deleteLehre(lehre);
         getAllLehre();
         fillTableview();
     }
 
     private void findBy(String param) {
-        RestTemplateClient restClientTemplate = new RestTemplateClient(restTemplate);
+        LehreClient restClientTemplate = new LehreClient(restTemplate);
         if (rbtVorname.isSelected()) {
             list = restClientTemplate.findByName(param);
 

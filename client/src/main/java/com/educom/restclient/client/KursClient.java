@@ -2,9 +2,10 @@ package com.educom.restclient.client;
 
 
 import com.educom.restclient.model.Kurs;
+import com.educom.restclient.ui.controller.LoginController;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
 import org.springframework.web.client.RestTemplate;
 
 import java.net.URI;
@@ -21,27 +22,22 @@ public class KursClient implements HttpService<Kurs> {
     static final String URL_ADDKurs = "http://localhost:8082/api/kurs/kurs";
     static final String URL_KursLIST = "http://localhost:8082/api/kurs/Kurslist";
     static final String URL_GETBYID = "http://localhost:8082/api/kurs/{id}";
-//    @Autowired
-//    private final WebClient webClient;
+
     @Autowired
     RestTemplate restTemplate;
 
-
-    public KursClient(RestTemplate restTemplate) {
-        this.restTemplate = restTemplate;
-
-    }
-
     @Override
     public String delete(Long id) {
+        RestTemplate restTemplate=new RestTemplate();
         final String uri = URL_DELETEBYID;
         Map<String, String> params = new HashMap<>();
         params.put("id", String.valueOf(id));
+        HttpEntity<Kurs> entity = new HttpEntity<Kurs>(getHeader());
         System.out.println(id);
-        restTemplate.delete(uri, params);
+        restTemplate.exchange(uri, HttpMethod.DELETE,entity,String.class, params);
+
         return "removed";
     }
-
 
 
     @Override
@@ -49,10 +45,12 @@ public class KursClient implements HttpService<Kurs> {
         final String uri = URL_FINDBYFIRSNAME;
         Map<String, String> urlParameters = new HashMap<>();
         urlParameters.put("firstname", firstname);
-        ResponseEntity<Kurs[]> entity = restTemplate.getForEntity(uri,
+        HttpEntity<Kurs> entity = new HttpEntity<Kurs>(getHeader());
+        ResponseEntity<Kurs[]> responseEntity = restTemplate.getForEntity(uri,
                 Kurs[].class,
                 urlParameters);
-        return entity.getBody() != null ? Arrays.asList(entity.getBody()) : Collections.emptyList();
+
+        return responseEntity.getBody() != null ? Arrays.asList(entity.getBody()) : Collections.emptyList();
 
     }
 
@@ -61,10 +59,12 @@ public class KursClient implements HttpService<Kurs> {
         final String uri = URL_FINDBYLASTNAME;
         Map<String, String> urlParameters = new HashMap<>();
         urlParameters.put("lastname", lastname);
-        ResponseEntity<Kurs[]> entity = restTemplate.getForEntity(uri,
+        HttpEntity<Kurs> entity = new HttpEntity<Kurs>(getHeader());
+        ResponseEntity<Kurs[]> response = restTemplate.getForEntity(uri,
                 Kurs[].class,
                 urlParameters);
-        return entity.getBody() != null ? Arrays.asList(entity.getBody()) : Collections.emptyList();
+
+        return response.getBody() != null ? Arrays.asList(entity.getBody()) : Collections.emptyList();
 
     }
 
@@ -75,14 +75,13 @@ public class KursClient implements HttpService<Kurs> {
         final String uri = URL_UPDATE_Kurs;
         Map<String, String> params = new HashMap<String, String>();
         params.put("id", String.valueOf(id));
-
         RestTemplate restTemplate = new RestTemplate();
         restTemplate.put(uri, kurs, params);
         return "updated";
     }
 
-    @Override
-    public ResponseEntity<String> add(Kurs kurs) {
+@Override
+    public String add(Kurs kurs) {
         RestTemplate restTemplate = new RestTemplate();
 
         URI uri = null;
@@ -92,37 +91,60 @@ public class KursClient implements HttpService<Kurs> {
         } catch (URISyntaxException e) {
             e.printStackTrace();
         }
-        System.out.println(kurs);
-        ResponseEntity<String> result = restTemplate.postForEntity(uri, kurs, String.class);
-        return result;
+
+        HttpEntity<Kurs> entity = new HttpEntity<Kurs>(kurs, getHeader());
+        String response = restTemplate.postForObject(uri, entity, String.class);
+
+        return response;
     }
+
+
 
 
     public List<Kurs> findByLehre(String lehre) {
         final String uri = URL_FINDBYLASTNAME;
         Map<String, String> urlParameters = new HashMap<>();
         urlParameters.put("lehre", lehre);
-        ResponseEntity<Kurs[]> entity = restTemplate.getForEntity(uri,
+        HttpEntity<Kurs> entity = new HttpEntity<Kurs>(getHeader());
+        ResponseEntity<Kurs[]> response = restTemplate.getForEntity(uri,
                 Kurs[].class,
                 urlParameters);
-        return entity.getBody() != null ? Arrays.asList(entity.getBody()) : Collections.emptyList();
+
+        return response.getBody() != null ? Arrays.asList(entity.getBody()) : Collections.emptyList();
     }
     public List<Kurs> getAllKurs() {
         final String uri = URL_KursLIST;
-        ResponseEntity<List<Kurs>> kurslist = restTemplate.getForObject(uri,
-                ResponseEntity.class
-                );
-        return  kurslist.getBody();
+        RestTemplate restTemplate = new RestTemplate();
+        HttpEntity<Kurs> entity = new HttpEntity<Kurs>(getHeader());
+        ResponseEntity<Kurs[]> response = restTemplate.exchange(URL_KursLIST,
+                HttpMethod.GET, entity, Kurs[].class);
+      //  ResponseEntity<List<Kurs>> kurslist = restTemplate.getForObject(uri, ResponseEntity.class);
+
+        return  response.getBody() != null ? Arrays.asList(entity.getBody()) : Collections.emptyList();
     }
+
     public List<Kurs> findByRaum(String raum) {
         final String uri = URL_FINDBYLASTNAME;
         Map<String, String> urlParameters = new HashMap<>();
         urlParameters.put("raum", raum);
-        ResponseEntity<Kurs[]> entity = restTemplate.getForEntity(uri,
+        HttpEntity<Kurs> entity = new HttpEntity<Kurs>(getHeader());
+        ResponseEntity<Kurs[]> response = restTemplate.getForEntity(uri,
                 Kurs[].class,
                 urlParameters);
-        return entity.getBody() != null ? Arrays.asList(entity.getBody()) : Collections.emptyList();
+
+        return response.getBody() != null ? Arrays.asList(entity.getBody()) : Collections.emptyList();
     }
 
+    @Override
+    public HttpHeaders getHeader() {
+
+        HttpHeaders headers = new HttpHeaders();
+        String authHeader = "Bearer " + LoginController.authenticationText;
+        headers.set(HttpHeaders.AUTHORIZATION, authHeader);
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
+        headers.setAccept(Arrays.asList(new MediaType[] { MediaType.APPLICATION_JSON }));
+        return headers;
+    }
 
 }

@@ -90,7 +90,7 @@ public class KursController implements Initializable {
         Kurs kurs = new Kurs(tfKursName.getText(), null, null);
         kurs.setRaum(cbxRaum.getValue());
         kurs.setLehre(cbxLehre.getValue());
-        kursClient = new KursClient(restTemplate);
+        kursClient = new KursClient();
         System.out.println(kurs);
         kursClient.add(kurs);
         getAllKurs();
@@ -114,8 +114,7 @@ public class KursController implements Initializable {
     @FXML
     void saveAction(ActionEvent event) {
         Kurs updatedKurs = new Kurs();
-
-        kursClient = new KursClient(restTemplate);
+        kursClient = new KursClient();
         kursClient.update(getUpdatedKursId(), updatedKurs);
         getAllKurs();
         fillTableview();
@@ -125,7 +124,8 @@ public class KursController implements Initializable {
 
     private void getAllKurs() {
         list = new WebClientStockClient(webClient).getKursList().collectList().block();
-
+//       kursClient= new KursClient();
+//       list=kursClient.getAllKurs();
     }
 
     private void fillTableview() {
@@ -137,14 +137,14 @@ public class KursController implements Initializable {
     }
 
     private void deleteClient(Long id) {
-        kursClient = new KursClient(restTemplate);
+        kursClient = new KursClient();
         kursClient.delete(id);
         getAllKurs();
         fillTableview();
     }
 
     private void findBy(String param) {
-        kursClient = new KursClient(restTemplate);
+        kursClient = new KursClient();
         if (rbtKursName.isSelected()) {
             list = kursClient.findByName(param);
 

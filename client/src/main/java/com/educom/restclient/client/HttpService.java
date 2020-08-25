@@ -1,12 +1,10 @@
 package com.educom.restclient.client;
 
-import org.springframework.http.ResponseEntity;
-
 import java.util.List;
 
-public interface HttpService<E> {
+public interface HttpService<E> extends RequestHeaderHeader<E> {
     String update(Long id, E e);
-    ResponseEntity<String> add(E e);
+    String add(E e);
     String delete(Long id);
     List<E> findByName(String name);
 

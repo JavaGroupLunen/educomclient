@@ -2,8 +2,11 @@ package com.educom.restclient.client;
 
 
 import com.educom.restclient.model.Schuler;
+import com.educom.restclient.ui.controller.LoginController;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestTemplate;
 
@@ -102,7 +105,7 @@ public class SchulerClient implements HttpService<Schuler> {
     }
 
     @Override
-    public ResponseEntity<String> add(Schuler schuler) {
+    public String add(Schuler schuler) {
         RestTemplate restTemplate = new RestTemplate();
 
         URI uri = null;
@@ -113,11 +116,23 @@ public class SchulerClient implements HttpService<Schuler> {
             e.printStackTrace();
         }
         System.out.println(schuler);
-        ResponseEntity<String> result = restTemplate.postForEntity(uri, schuler, String.class);
+        //ResponseEntity<String> result = restTemplate.postForEntity(uri, schuler, String.class);
 
 
-        return result;
+       // return result;
+        return null;
     }
 
+@Override
+    public HttpHeaders getHeader() {
+
+        HttpHeaders headers = new HttpHeaders();
+        String authHeader = "Bearer " + LoginController.authenticationText;
+        headers.set(HttpHeaders.AUTHORIZATION, authHeader);
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
+        headers.setAccept(Arrays.asList(new MediaType[] { MediaType.APPLICATION_JSON }));
+        return headers;
+    }
 
 }

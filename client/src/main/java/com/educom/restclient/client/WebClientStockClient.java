@@ -3,7 +3,12 @@ package com.educom.restclient.client;
 import com.educom.restclient.model.Kurs;
 import com.educom.restclient.model.Lehre;
 import com.educom.restclient.model.Schuler;
+import com.educom.restclient.model.Vertrag;
+import com.educom.restclient.ui.controller.LoginController;
 import lombok.extern.log4j.Log4j2;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.reactive.function.client.WebClient;
@@ -13,6 +18,9 @@ import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.time.Duration;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.function.Consumer;
 
 
 @Log4j2
@@ -29,6 +37,7 @@ public class WebClientStockClient implements StockClient {
         log.info("WebClientStockClient");
         return webClient.get()
                 .uri("localhost:8082/api/lehre/getbyId/{id}", id)
+                .header("Authorization", "Bearer " + LoginController.authenticationText)
                 .retrieve()
                 .bodyToFlux(Lehre.class)
                 .retryBackoff(5, Duration.ofSeconds(1), Duration.ofSeconds(5))
@@ -38,9 +47,11 @@ public class WebClientStockClient implements StockClient {
 
     @Override
     public Flux<Lehre> getLehreList() {
+        System.out.println(LoginController.authenticationText);
         log.info("WebClientStockClient");
         return webClient.get()
                 .uri("localhost:8082/api/lehre/lehrelist")
+                .header("Authorization", "Bearer " + LoginController.authenticationText)
                 .retrieve()
                 .bodyToFlux(Lehre.class)
                 .retryBackoff(5, Duration.ofSeconds(1), Duration.ofSeconds(5))
@@ -52,6 +63,7 @@ public class WebClientStockClient implements StockClient {
         log.info("WebClientStockClient");
         return webClient.get()
                 .uri("localhost:8082/api/schuler/schulerlist")
+                .header("Authorization", "Bearer " + LoginController.authenticationText)
                 .retrieve()
                 .bodyToFlux(Schuler.class)
                 .retryBackoff(5, Duration.ofSeconds(1), Duration.ofSeconds(5))
@@ -63,6 +75,7 @@ public class WebClientStockClient implements StockClient {
         log.info("WebClientStockClient");
         return webClient.get()
                 .uri("localhost:8082/api/kurs/kurslist")
+                .header("Authorization", "Bearer " + LoginController.authenticationText)
                 .retrieve()
                 .bodyToFlux(Kurs.class)
                 .retryBackoff(5, Duration.ofSeconds(1), Duration.ofSeconds(5))
@@ -75,6 +88,7 @@ public class WebClientStockClient implements StockClient {
         log.info("WebClientStockClient");
         return webClient.delete()
                 .uri("localhost:8082/api/lehre/deletebyId/{id}", lehre.getId())
+                .header("Authorization", "Bearer " + LoginController.authenticationText)
                 .retrieve()
                 .bodyToFlux(Lehre.class)
                 .retryBackoff(5, Duration.ofSeconds(1), Duration.ofSeconds(5))
@@ -85,7 +99,7 @@ public class WebClientStockClient implements StockClient {
 
     }
     @Override
-    public ResponseEntity<String> saveLehre(Lehre lehre)  {
+    public String saveLehre(Lehre lehre)  {
         RestTemplate restTemplate = new RestTemplate();
 
         URI uri = null;
@@ -95,9 +109,21 @@ public class WebClientStockClient implements StockClient {
         } catch (URISyntaxException e) {
             e.printStackTrace();        }
 
-
-        ResponseEntity<String> result = restTemplate.postForEntity(uri, lehre, String.class);
+        HttpEntity<Lehre> entity = new HttpEntity<Lehre>(lehre, getHeader());
+        //String response = restTemplate.postForObject(uri, entity, String.class);
+        String result = restTemplate.postForObject(uri, entity, String.class);
         return result;
+    }
+
+    public HttpHeaders getHeader() {
+
+        HttpHeaders headers = new HttpHeaders();
+        String authHeader = "Bearer " + LoginController.authenticationText;
+        headers.set(HttpHeaders.AUTHORIZATION, authHeader);
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
+        headers.setAccept(Arrays.asList(new MediaType[] { MediaType.APPLICATION_JSON }));
+        return headers;
     }
 
 

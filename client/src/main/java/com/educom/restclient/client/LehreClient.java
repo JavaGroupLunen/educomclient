@@ -1,32 +1,36 @@
 package com.educom.restclient.client;
 
 import com.educom.restclient.model.Lehre;
+import com.educom.restclient.ui.controller.LoginController;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.*;
 
-public class RestTemplateClient {
-
+public class LehreClient implements HttpService<Lehre> {
     static final String URL_UPDATE_LEHRE = "http://localhost:8082/api/lehre/updatelehre/{id}";
     static final String URL_FINDBYLASTNAME="http://localhost:8082/api/lehre/findByLastName/{lastname}";
     static final String URL_FINDBYFIRSNAME="http://localhost:8082/api/lehre/findByName/{firstname}";
     static final String URL_FINDBYEMAIL= "http://localhost:8082/api/lehre/findByEmailId/{emailId}";
     static final String URL_DELETEBYID="http://localhost:8082/api/lehre/deletebyId/{id}";
+
     @Autowired
     RestTemplate restTemplate;
 
-    public RestTemplateClient(RestTemplate restTemplate) {
+    public LehreClient(RestTemplate restTemplate) {
         this.restTemplate = restTemplate;
     }
 
-    public void deleteEmployee(Lehre lehre) {
+    public void deleteLehre(Lehre lehre) {
         final String uri =URL_DELETEBYID;
         Map<String, String> params = new HashMap<>();
         params.put("id", String.valueOf(lehre.getId()));
         restTemplate.delete(uri, params);
         System.out.println("removed");
+
     }
 
    public List<Lehre> findByEmailId(String emailId){
@@ -39,6 +43,22 @@ public class RestTemplateClient {
        return entity.getBody() != null? Arrays.asList(entity.getBody()) :Collections.emptyList();
 
    }
+
+    @Override
+    public String update(Long id, Lehre lehre) {
+        return null;
+    }
+
+    @Override
+    public String add(Lehre lehre) {
+        return null;
+    }
+
+    @Override
+    public String delete(Long id) {
+        return null;
+    }
+
     public List<Lehre> findByName(String firstname){
         final String uri =URL_FINDBYFIRSNAME;
         Map<String, String> urlParameters = new HashMap<>();
@@ -72,6 +92,15 @@ public class RestTemplateClient {
         return "success";
     }
 
+    public HttpHeaders getHeader() {
 
+        HttpHeaders headers = new HttpHeaders();
+        String authHeader = "Bearer " + LoginController.authenticationText;
+        headers.set(HttpHeaders.AUTHORIZATION, authHeader);
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
+        headers.setAccept(Arrays.asList(new MediaType[] { MediaType.APPLICATION_JSON }));
+        return headers;
+    }
 
 }
