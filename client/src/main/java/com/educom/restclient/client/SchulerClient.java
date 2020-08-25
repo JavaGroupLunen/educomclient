@@ -5,9 +5,7 @@ import com.educom.restclient.model.Schuler;
 import com.educom.restclient.ui.controller.LoginController;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
 import org.springframework.web.client.RestTemplate;
 
 import java.net.URI;
@@ -24,16 +22,10 @@ public class SchulerClient implements HttpService<Schuler> {
     static final String URL_ADDSCHULER = "http://localhost:8082/api/schuler/add";
     static final String URL_SCHULERLIST = "http://localhost:8082/api/schuler/schulerlist";
     static final String URL_GETBYID = "http://localhost:8082/api/schuler/{id}";
-//    @Autowired
-//    private final WebClient webClient;
+
     @Autowired
     RestTemplate restTemplate;
 
-
-    public SchulerClient(RestTemplate restTemplate) {
-        this.restTemplate = restTemplate;
-
-    }
 
     @Override
     public String delete(Long id) {
@@ -41,7 +33,9 @@ public class SchulerClient implements HttpService<Schuler> {
         Map<String, String> params = new HashMap<>();
         params.put("id", String.valueOf(id));
         System.out.println(id);
-        restTemplate.delete(uri, params);
+        HttpEntity<Schuler> entity = new HttpEntity<Schuler>(getHeader());
+        System.out.println(id);
+        restTemplate.exchange(uri, HttpMethod.DELETE,entity,String.class, params);
         return "removed";
     }
 
@@ -85,9 +79,8 @@ public class SchulerClient implements HttpService<Schuler> {
         final String uri = URL_UPDATE_schuler;
         Map<String, String> params = new HashMap<String, String>();
         params.put("id", String.valueOf(id));
-
-        RestTemplate restTemplate = new RestTemplate();
-        restTemplate.put(uri, schuler, params);
+        HttpEntity<Schuler> entity = new HttpEntity<Schuler>(schuler, getHeader());
+        restTemplate.exchange(uri, HttpMethod.PUT,entity,String.class, params);
         return "updated";
 
     }
@@ -97,9 +90,8 @@ public class SchulerClient implements HttpService<Schuler> {
         final String uri = URL_UPDATE_schuler;
         Map<String, String> params = new HashMap<String, String>();
         params.put("id", String.valueOf(id));
-
-        RestTemplate restTemplate = new RestTemplate();
-        restTemplate.put(uri, schuler, params);
+        HttpEntity<Schuler> entity = new HttpEntity<Schuler>(schuler, getHeader());
+        restTemplate.exchange(uri, HttpMethod.PUT,entity,String.class, params);
         return "updated";
 
     }
@@ -107,7 +99,6 @@ public class SchulerClient implements HttpService<Schuler> {
     @Override
     public String add(Schuler schuler) {
         RestTemplate restTemplate = new RestTemplate();
-
         URI uri = null;
         try {
             final String baseUrl = URL_ADDSCHULER;
@@ -115,17 +106,14 @@ public class SchulerClient implements HttpService<Schuler> {
         } catch (URISyntaxException e) {
             e.printStackTrace();
         }
-        System.out.println(schuler);
-        //ResponseEntity<String> result = restTemplate.postForEntity(uri, schuler, String.class);
+        HttpEntity<Schuler> entity = new HttpEntity<Schuler>(schuler, getHeader());
+        String response = restTemplate.postForObject(uri, entity, String.class);
+        return response;
 
-
-       // return result;
-        return null;
     }
 
 @Override
     public HttpHeaders getHeader() {
-
         HttpHeaders headers = new HttpHeaders();
         String authHeader = "Bearer " + LoginController.authenticationText;
         headers.set(HttpHeaders.AUTHORIZATION, authHeader);

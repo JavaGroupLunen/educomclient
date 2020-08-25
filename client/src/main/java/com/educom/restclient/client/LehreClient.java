@@ -3,11 +3,14 @@ package com.educom.restclient.client;
 import com.educom.restclient.model.Lehre;
 import com.educom.restclient.ui.controller.LoginController;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestTemplate;
 
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.*;
 
 public class LehreClient implements HttpService<Lehre> {
@@ -16,6 +19,7 @@ public class LehreClient implements HttpService<Lehre> {
     static final String URL_FINDBYFIRSNAME="http://localhost:8082/api/lehre/findByName/{firstname}";
     static final String URL_FINDBYEMAIL= "http://localhost:8082/api/lehre/findByEmailId/{emailId}";
     static final String URL_DELETEBYID="http://localhost:8082/api/lehre/deletebyId/{id}";
+    static final String URL_ADD_LEHRE = "http://localhost:8082/api/lehre/updatelehre/{id}";
 
     @Autowired
     RestTemplate restTemplate;
@@ -51,7 +55,20 @@ public class LehreClient implements HttpService<Lehre> {
 
     @Override
     public String add(Lehre lehre) {
-        return null;
+        RestTemplate restTemplate = new RestTemplate();
+
+        URI uri = null;
+        try {
+            final String baseUrl = URL_ADD_LEHRE;
+            uri = new URI(baseUrl);
+        } catch (URISyntaxException e) {
+            e.printStackTrace();
+        }
+
+        HttpEntity<Lehre> entity = new HttpEntity<Lehre>(lehre, getHeader());
+        String response = restTemplate.postForObject(uri, entity, String.class);
+
+        return response;
     }
 
     @Override
@@ -93,7 +110,6 @@ public class LehreClient implements HttpService<Lehre> {
     }
 
     public HttpHeaders getHeader() {
-
         HttpHeaders headers = new HttpHeaders();
         String authHeader = "Bearer " + LoginController.authenticationText;
         headers.set(HttpHeaders.AUTHORIZATION, authHeader);

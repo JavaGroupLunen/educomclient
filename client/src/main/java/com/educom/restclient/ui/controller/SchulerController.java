@@ -79,7 +79,7 @@ public class SchulerController implements Initializable {
         schuler.setStadt(tfStadt.getText());
         schuler.setPlz(tfPlz.getText());
         schuler.setPhoneNumber(tfPhoneNumber.getText());
-        schulerClient = new SchulerClient(restTemplate);
+        schulerClient = new SchulerClient();
         System.out.println(schuler);
         schulerClient.add(schuler);
         getAllSchuler();
@@ -103,7 +103,7 @@ public class SchulerController implements Initializable {
         updatedSchuler.setPhoneNumber(updatedSchuler.getPhoneNumber());
         updatedSchuler.setGeburstDatum(new Date());
         updatedSchuler.setPlz(tfPlz.getText());
-        schulerClient = new SchulerClient(restTemplate);
+        schulerClient = new SchulerClient();
         schulerClient.updateschuler(getUpdatedSchulerId(), updatedSchuler);
         getAllSchuler();
         fillTableview();
@@ -124,14 +124,14 @@ public class SchulerController implements Initializable {
     }
 
     private void deleteClient(Long id) {
-        schulerClient= new SchulerClient(restTemplate);
+        schulerClient= new SchulerClient();
         schulerClient.delete(id);
         getAllSchuler();
         fillTableview();
     }
 
     private void findBy(String param) {
-        schulerClient = new SchulerClient(restTemplate);
+        schulerClient = new SchulerClient();
         if (rbtVorname.isSelected()) {
             list = schulerClient.findByName(param);
 
