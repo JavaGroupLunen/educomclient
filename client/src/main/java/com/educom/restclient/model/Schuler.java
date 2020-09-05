@@ -1,7 +1,7 @@
 package com.educom.restclient.model;
 
 
-import java.util.Date;
+import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -131,12 +131,12 @@ public class Schuler extends Person{
     }
 
     @Override
-    public Date getGeburstDatum() {
+    public LocalDate getGeburstDatum() {
         return super.getGeburstDatum();
     }
 
     @Override
-    public void setGeburstDatum(Date geburstDatum) {
+    public void setGeburstDatum(LocalDate geburstDatum) {
         super.setGeburstDatum(geburstDatum);
     }
 

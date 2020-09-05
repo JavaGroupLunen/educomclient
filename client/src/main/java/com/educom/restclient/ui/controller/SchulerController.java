@@ -14,6 +14,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.util.StringConverter;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationContext;
 import org.springframework.core.io.Resource;
@@ -24,6 +25,8 @@ import org.springframework.web.reactive.function.client.WebClient;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.List;
 import java.util.ResourceBundle;
@@ -39,11 +42,12 @@ public class SchulerController implements Initializable {
     private ObservableList<Schuler> schulersData = observableArrayList();
     @FXML
     private TableColumn<Schuler, String> clmVorname, clmName, clmEmail, clmPhoneNumber, clmGender, clmAdres, clmPlz, clmStadt;
-
     @FXML
-    private TextField tfFirstName, tfLastName, tfEmail, tfGDatum, tfAdres, tfStadt, tfPlz, tfPhoneNumber, tfSearch;
+    private TextField tfFirstName, tfLastName, tfEmail, tfAdres, tfStadt, tfPlz, tfPhoneNumber, tfSearch;
     @FXML
     private ComboBox<Gender> cmbGender;
+    @FXML
+    private DatePicker cmbGdatum;
     @FXML
     private TableColumn clmDelete, clmUpdate;
     @FXML
@@ -61,6 +65,30 @@ public class SchulerController implements Initializable {
     private ApplicationContext applicationContext;
     @Value("classpath:/lehre.fxml")
     Resource  resource;
+
+    String pattern = "dd-MM-yyyy";
+  private   StringConverter converter = new StringConverter<LocalDate>() {
+        DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern(pattern);
+
+        @Override
+        public String toString(LocalDate date) {
+            if (date != null) {
+                return dateFormatter.format(date);
+            } else {
+                return "";
+            }
+        }
+
+        @Override
+        public LocalDate fromString(String string) {
+            if (string != null && !string.isEmpty()) {
+                return LocalDate.parse(string, dateFormatter);
+            } else {
+                return null;
+            }
+        }
+    };
+
     @FXML
     private void addAction() throws IOException, URISyntaxException {
 
@@ -69,12 +97,7 @@ public class SchulerController implements Initializable {
         schuler.setLastName(tfLastName.getText());
         schuler.setEmail(tfEmail.getText());
         schuler.setAdresse(tfAdres.getText());
-        if (tfGDatum.getText() != null && !tfGDatum.getText().trim().isEmpty()) {
-            Long gdatum = Long.valueOf(tfGDatum.getText());
-            schuler.setGeburstDatum(new Date(gdatum));
-        } else {
-            schuler.setGeburstDatum(new Date());
-        }
+        schuler.setGeburstDatum(cmbGdatum.getValue());
         schuler.setGender(cmbGender.getValue());
         schuler.setStadt(tfStadt.getText());
         schuler.setPlz(tfPlz.getText());
@@ -87,11 +110,6 @@ public class SchulerController implements Initializable {
         clearField();
     }
 
-
-
-
-
-
     @FXML
     private void saveAction() throws IOException, URISyntaxException {
         Schuler updatedSchuler = new Schuler();
@@ -101,7 +119,7 @@ public class SchulerController implements Initializable {
         updatedSchuler.setAdresse(tfAdres.getText());
         updatedSchuler.setStadt(tfStadt.getText());
         updatedSchuler.setPhoneNumber(updatedSchuler.getPhoneNumber());
-        updatedSchuler.setGeburstDatum(new Date());
+        updatedSchuler.setGeburstDatum(cmbGdatum.getValue());
         updatedSchuler.setPlz(tfPlz.getText());
         schulerClient = new SchulerClient();
         schulerClient.updateschuler(getUpdatedSchulerId(), updatedSchuler);
@@ -149,6 +167,7 @@ public class SchulerController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+        cmbGdatum.setConverter(converter);
         fillcomboBox();
         btnAdd.getStyleClass().add("button-raised");
         btnSave.getStyleClass().add("button-raised");
@@ -203,7 +222,6 @@ public class SchulerController implements Initializable {
         tfLastName.setText("");
         tfEmail.setText("");
         tfAdres.setText("");
-        tfGDatum.setText("");
         tfPhoneNumber.setText("");
         tfPlz.setText("");
         tfStadt.setText("");
@@ -224,7 +242,7 @@ public class SchulerController implements Initializable {
         tfLastName.setText(p.getLastName());
         tfEmail.setText(p.getEmail());
         tfAdres.setText(p.getAdresse());
-        tfGDatum.setText(String.valueOf(p.getGeburstDatum()));
+        cmbGdatum.setValue(p.getGeburstDatum());
         tfPhoneNumber.setText(p.getPhoneNumber());
         tfPlz.setText(p.getPlz());
         tfStadt.setText(p.getStadt());

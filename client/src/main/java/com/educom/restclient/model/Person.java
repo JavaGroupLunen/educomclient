@@ -1,7 +1,9 @@
 package com.educom.restclient.model;
 
 
-import java.util.Date;
+import org.springframework.format.annotation.DateTimeFormat;
+
+import java.time.LocalDate;
 
 
 
@@ -13,7 +15,8 @@ public abstract class Person {
     protected  String email;
     protected String phoneNumber;
     protected Gender gender;
-    protected Date geburstDatum;
+    @DateTimeFormat(pattern = "dd-MM-yyyy")
+    protected LocalDate geburstDatum;
     protected String adresse;
     protected String stadt;
     protected String land;
@@ -68,11 +71,11 @@ public abstract class Person {
         this.gender = gender;
     }
 
-    public Date getGeburstDatum() {
+    public LocalDate getGeburstDatum() {
         return geburstDatum;
     }
 
-    public void setGeburstDatum(Date geburstDatum) {
+    public void setGeburstDatum(LocalDate geburstDatum) {
         this.geburstDatum = geburstDatum;
     }
 

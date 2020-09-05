@@ -1,16 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.Button?>
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.control.PasswordField?>
-<?import javafx.scene.control.TextField?>
-<?import javafx.scene.layout.AnchorPane?>
-<?import javafx.scene.layout.ColumnConstraints?>
-<?import javafx.scene.layout.GridPane?>
-<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.layout.*?>
 
-
-<AnchorPane fx:id="rootPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.educom.restclient.ui.controller.RegisterController">
+<AnchorPane fx:id="rootPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/11.0.2" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.educom.restclient.ui.controller.RegisterController">
    <children>
       <GridPane prefHeight="393.0" prefWidth="592.0">
         <columnConstraints>
@@ -26,7 +21,6 @@
             <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
         </rowConstraints>
          <children>
-            <Button fx:id="btnSave" mnemonicParsing="false" onAction="#saveHandle" text="Anmelden" GridPane.columnIndex="1" GridPane.rowIndex="5" />
             <Label alignment="BOTTOM_RIGHT" prefHeight="16.0" prefWidth="235.0" text="Benutzername" GridPane.rowIndex="1" />
             <Label alignment="BOTTOM_RIGHT" prefHeight="16.0" prefWidth="229.0" text="Email" GridPane.rowIndex="2" />
             <Label alignment="BOTTOM_RIGHT" prefHeight="16.0" prefWidth="229.0" text="Password" GridPane.rowIndex="3" />
@@ -35,6 +29,23 @@
             <TextField fx:id="tfEmail" GridPane.columnIndex="1" GridPane.rowIndex="2" />
             <PasswordField fx:id="pswPassword" GridPane.columnIndex="1" GridPane.rowIndex="3" />
             <PasswordField fx:id="pswPaswordverify" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+            <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="5">
+               <children>
+                  <Button fx:id="btnSave" mnemonicParsing="false" onAction="#saveHandle" text="Anmelden" />
+                  <Label fx:id="lblWarnung" alignment="CENTER_RIGHT" contentDisplay="CENTER" prefHeight="16.0" prefWidth="202.0" text="status" textFill="#da0d0d" />
+               </children></HBox>
+            <Button fx:id="btnLogin" mnemonicParsing="false" onAction="#homeHandle" prefHeight="23.0" prefWidth="60.0" GridPane.rowIndex="5">
+               <graphic>
+                  <ImageView fitHeight="25.0" fitWidth="66.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@icons/icons8_Home_32px.png" />
+                     </image>
+                  </ImageView>
+               </graphic>
+               <GridPane.margin>
+                  <Insets left="50.0" />
+               </GridPane.margin>
+            </Button>
          </children>
       </GridPane>
    </children>

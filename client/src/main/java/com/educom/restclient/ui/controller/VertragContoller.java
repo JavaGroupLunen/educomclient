@@ -25,6 +25,8 @@ import org.springframework.web.reactive.function.client.WebClient;
 
 import java.io.IOException;
 import java.net.URL;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -101,6 +103,8 @@ public class VertragContoller implements Initializable {
     @FXML
     private TableView<Vertrag> tbwVertrag;
     @FXML
+    private DatePicker cmbGdatum;
+    @FXML
     private TableColumn<Vertrag, String> clmSchuler, clmZahlungstype;
     @FXML
     private TableColumn<Vertrag, Date> clmVertragsdatum, clmVertragsbegin, clmVertragsende;
@@ -133,7 +137,8 @@ public class VertragContoller implements Initializable {
     private ApplicationContext applicationContext;
     private Kurs selectedKurse;
     private KursClient kursClient;
-
+    String pattern = "dd-MM-yyyy";
+    DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern(pattern);
 
     @FXML
     void addVertragAction(ActionEvent event) {
@@ -142,12 +147,7 @@ public class VertragContoller implements Initializable {
         schuler.setLastName(tfName.getText());
         schuler.setEmail(tfEmail.getText());
         schuler.setAdresse(tfAdresse.getText());
-        if (tfGeburstdatum.getText() != null && !tfGeburstdatum.getText().trim().isEmpty()) {
-            Long gdatum = Long.valueOf(tfGeburstdatum.getText());
-            schuler.setGeburstDatum(new Date(gdatum));
-        } else {
-            schuler.setGeburstDatum(new Date());
-        }
+        schuler.setGeburstDatum(LocalDate.parse(cmbGdatum.getValue().format(dateFormatter)));
         schuler.setGender(cbxGeschlecht.getValue());
         schuler.setStadt(tfStadt.getText());
         schuler.setPlz(tfPlz.getText());

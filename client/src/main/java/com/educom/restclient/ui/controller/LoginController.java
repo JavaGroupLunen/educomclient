@@ -50,7 +50,17 @@ public class LoginController  implements Initializable {
         authenticationRequest.setPassword(pswPassword.getText());
         authenticationText=clientAuthentication.postLogin(authenticationRequest);
         System.out.println(authenticationText);
+        fieldClear();
+        if(!authenticationText.isEmpty()){
+            loadStage("/vertrag.fxml");
+        }
     }
+
+    private void fieldClear() {
+        txtBenutzername.setText("");
+        pswPassword.setText("");
+    }
+
     @FXML
     void registerLoad(ActionEvent event){
         loadStage("/registerform.fxml");

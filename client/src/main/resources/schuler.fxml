@@ -3,6 +3,7 @@
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.DatePicker?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.RadioButton?>
 <?import javafx.scene.control.Separator?>
@@ -67,7 +68,7 @@
                                <Label text="e-mail" />
                                <TextField fx:id="tfEmail" />
                                <Label text="Geburt Datum" />
-                               <TextField fx:id="tfGDatum" />
+                        <DatePicker fx:id="cmbGdatum" prefHeight="26.0" prefWidth="437.0" />
                                <Label layoutX="20.0" layoutY="10.0" text="Gender" />
                                <ComboBox fx:id="cmbGender" prefHeight="26.0" prefWidth="385.0" />
                                <Label layoutX="20.0" layoutY="10.0" text="Tel" />
