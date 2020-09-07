@@ -25,7 +25,6 @@ import org.springframework.web.reactive.function.client.WebClient;
 
 import java.io.IOException;
 import java.net.URL;
-import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -105,6 +104,10 @@ public class VertragContoller implements Initializable {
     @FXML
     private DatePicker cmbGdatum;
     @FXML
+    private DatePicker cbmAnfangDatum;
+    @FXML
+    private DatePicker cbmEndeDatum;
+    @FXML
     private TableColumn<Vertrag, String> clmSchuler, clmZahlungstype;
     @FXML
     private TableColumn<Vertrag, Date> clmVertragsdatum, clmVertragsbegin, clmVertragsende;
@@ -128,15 +131,16 @@ public class VertragContoller implements Initializable {
     TableColumn<Kurs, String> clmEndeBis;
     @FXML
     private Button btnVertragAdd;
-
+    @FXML
+    private RadioButton rbtVertragnum,rbtSchuler,rbtEltern,rbtStatus;
     private ObservableList<Vertrag> vertragsDatei = observableArrayList();
     private  List<Kurs> selectedKursList=new ArrayList<>();
-
     private ObservableList<Kurs> kurssAuswahlData =  observableArrayList();
     private VertragClient vertragClient;
     private ApplicationContext applicationContext;
     private Kurs selectedKurse;
     private KursClient kursClient;
+    private List<Vertrag> list = null;
     String pattern = "dd-MM-yyyy";
     DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern(pattern);
 
@@ -147,7 +151,7 @@ public class VertragContoller implements Initializable {
         schuler.setLastName(tfName.getText());
         schuler.setEmail(tfEmail.getText());
         schuler.setAdresse(tfAdresse.getText());
-        schuler.setGeburstDatum(LocalDate.parse(cmbGdatum.getValue().format(dateFormatter)));
+        schuler.setGeburstDatum(cmbGdatum.getValue());
         schuler.setGender(cbxGeschlecht.getValue());
         schuler.setStadt(tfStadt.getText());
         schuler.setPlz(tfPlz.getText());
@@ -155,15 +159,16 @@ public class VertragContoller implements Initializable {
         schuler.setVater(tfVatername.getText());
         schuler.setMutter(tfMuttername.getText());
         schuler.setKlasse(tfKlasse.getText());
-       // Set<Kurs> list = new ArrayList<Kurs>().stream().collect(Collectors.toSet());
-        schuler.setKurses(kurssAuswahlData.stream().collect(Collectors.toSet()));
+        Set<Kurs> list = new ArrayList<Kurs>().stream().collect(Collectors.toSet());
+        schuler.setKurses(list);
         // schulerClient = new SchulerClient(restTemplate);
         System.out.println(schuler);
         // schulerClient.add(schuler);
         vertragClient=new VertragClient(restTemplate);
         Vertrag neuvertrag=new Vertrag();
         neuvertrag.setSchuler(schuler);
-        neuvertrag.setKursList(kurssAuswahlData.stream().collect(Collectors.toList()));
+        neuvertrag.setVertragsbegin(cbmAnfangDatum.getValue());
+        neuvertrag.setVertragsende(cbmEndeDatum.getValue());
         neuvertrag.setAnmeldegebuhr(Double.valueOf(tfAnmeldegebuhr.getText()));
         neuvertrag.setEinmaligeKosten(Double.valueOf(tfEinmaligePrice.getText()));
         neuvertrag.setMaterialprice(Double.valueOf(tfMaterialkosten.getText()));
@@ -174,13 +179,26 @@ public class VertragContoller implements Initializable {
         neuvertrag.setRestbetrag(Double.valueOf(tfRestbetrag.getText()));
         neuvertrag.setZahlungstype(cbxZahlungsType.getValue());
         vertragClient.add(neuvertrag);
+        clearField();
+        clearKursAuswahlfield();
+        getAllVertrage();
+    }
 
-    }
-    private void getAllVertag(){
-       vertragClient=new VertragClient(restTemplate);
-       vertragsDatei= (ObservableList<Vertrag>) vertragClient.getAllVertrag().stream().collect(Collectors.toList());
-       tbwVertrag.setItems(vertragsDatei);
-    }
+
+
+//    private void fillTableview() {
+//        if (tfVertragSearch.getText().trim().isEmpty()) {
+//            getAllVertrage();
+//        }
+//        vertragsDatei = FXCollections.observableList(list).sorted();
+//        tbwVertrag.setItems(vertragsDatei);
+//    }
+
+//    private void getAllVertag(){
+//       vertragClient=new VertragClient(restTemplate);
+//       vertragsDatei= (ObservableList<Vertrag>) vertragClient.getAllVertrag().stream().collect(Collectors.toList());
+//       tbwVertrag.setItems(vertragsDatei);
+//    }
 
     private void clearField() {
         tfVorname.setText("");
@@ -211,6 +229,7 @@ public class VertragContoller implements Initializable {
         tbwVertrag.getItems().setAll(vertragsDatei);
         tbwVertrag.getColumns().setAll(clmSchuler, clmVertragsdatum, clmVertragsbegin, clmVertragsende, clmZahlungstype, clmEinmaligeKosten, clmAnmeldegebuhr, clmMaterialprice, clmMonatlischeRate, clmRabat, clmRabatPercent, clmSumme);
         //table fill here
+        fillVertragTableview();
         tfVertragSearch.textProperty().addListener(new ChangeListener<String>() {
             @Override
             public void changed(ObservableValue<? extends String> observable,
@@ -221,26 +240,28 @@ public class VertragContoller implements Initializable {
                     findBy(newValue);
 
                 }
-                //   fillTableview();
+                   fillVertragTableview();
 
             }
         });
-//         ToggleGroup searchKursGroup = new ToggleGroup();
-//         rbt.setToggleGroup(searchKursGroup);
-//         rbtKursName.setToggleGroup(searchKursGroup);
-//         rbtLehre.setToggleGroup(searchKursGroup);
+         ToggleGroup searchKursGroup = new ToggleGroup();
+         rbtEltern.setToggleGroup(searchKursGroup);
+         rbtVertragnum.setToggleGroup(searchKursGroup);
+         rbtStatus.setToggleGroup(searchKursGroup);
+         rbtSchuler.setToggleGroup(searchKursGroup);
     }
 
     private void findBy(String param) {
         vertragClient = new VertragClient(restTemplate);
-//        if (.isSelected()) {
-//            list = vertragClient.findByName(param);
-//
-//        } else if (rbtRaum.isSelected()) {
-//            list = kursClient.findByRaum(param);
-//        } else if (rbtLehre.isSelected()) {
-//            list = kursClient.findByLehre(param);
-//        }
+        if (rbtVertragnum.isSelected()) {
+            list = new WebClientStockClient(webClient).getVertragById(Long.valueOf(param)).collectList().block();;
+        } else if (rbtSchuler.isSelected()) {
+            list = vertragClient.findBySchuler(param);
+        } else if (rbtEltern.isSelected()) {
+            list = new WebClientStockClient(webClient).getVertragByEltern(param).collectList().block();
+        }else if (rbtStatus.isSelected()) {
+           // list = vertragClient.findByStatus(param);
+    }
     }
     @FXML
     private void addToKursAuswahlTable() {
@@ -268,9 +289,7 @@ public class VertragContoller implements Initializable {
         tbwAngemeldeteKurse.refresh();
 
     }
-    private void setKursListToVertrag(List list){
 
-    }
 
     private void tbwKursAuswahlFill() {
         tbwAngemeldeteKurse.setEditable(true);
@@ -301,7 +320,13 @@ public class VertragContoller implements Initializable {
     public Stage getVertragWindows() {
         return vertragWindows;
     }
-
+    private void fillVertragTableview() {
+        if (tfVertragSearch.getText().trim().isEmpty()) {
+            getAllVertrage();
+        }
+        vertragsDatei = FXCollections.observableList(list).sorted();
+        tbwVertrag.setItems(vertragsDatei);
+    }
     @FXML
     private void loadKursAuswahFenster(ActionEvent event) throws IOException {
         vertragWindows = (Stage) ((Node) event.getSource()).getScene().getWindow();
@@ -331,14 +356,10 @@ public class VertragContoller implements Initializable {
         tfEndeBis.setText(String.valueOf(auswahl.getEndeBis()));
         tfKosten.setText(String.valueOf(auswahl.getKosten()));
     }
-//
-//    @FXML
-//    void saveAction(ActionEvent event) {
-//
-//    }
 
-    private List<Lehre> getAllVertrage() {
-        return new WebClientStockClient(webClient).getLehreList().collectList().block();
+
+    private void getAllVertrage() {
+        list = new WebClientStockClient(webClient).getVertragList().collectList().block();
 
     }
 

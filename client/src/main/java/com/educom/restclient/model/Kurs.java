@@ -1,28 +1,24 @@
 package com.educom.restclient.model;
 
-
-import java.util.Date;
+import java.io.Serializable;
+import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.Set;
 
-public class Kurs {
+
+public class Kurs implements Serializable {
 
     private long id;
-
     private String name;
-
     private String raum;
     private Double kosten;
     private int dauer;
     private int kurslang;
-    private Date anfangAb;
-    private Date endeBis;
-
+    private LocalDate anfangAb;
+    private LocalDate endeBis;
     private KursType kurstype;
 
-
     private Lehre lehre;
-
 
     private Set<Schuler> schulerSet = new HashSet<>();
 
@@ -30,7 +26,7 @@ public class Kurs {
         this.name = name;
         this.raum = raum;
         this.lehre = lehre;
-
+       
     }
 
     public Kurs() {
@@ -87,19 +83,19 @@ public class Kurs {
         this.kurslang = kurslang;
     }
 
-    public Date getAnfangAb() {
+    public LocalDate getAnfangAb() {
         return anfangAb;
     }
 
-    public void setAnfangAb(Date anfangAb) {
+    public void setAnfangAb(LocalDate anfangAb) {
         this.anfangAb = anfangAb;
     }
 
-    public Date getEndeBis() {
+    public LocalDate getEndeBis() {
         return endeBis;
     }
 
-    public void setEndeBis(Date endeBis) {
+    public void setEndeBis(LocalDate endeBis) {
         this.endeBis = endeBis;
     }
 
@@ -125,22 +121,5 @@ public class Kurs {
 
     public void setSchulerSet(Set<Schuler> schulerSet) {
         this.schulerSet = schulerSet;
-    }
-
-    @Override
-    public String toString() {
-        return "Kurs{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", raum='" + raum + '\'' +
-                ", kosten=" + kosten +
-                ", dauer=" + dauer +
-                ", kurslang=" + kurslang +
-                ", anfangAb=" + anfangAb +
-                ", endeBis=" + endeBis +
-                ", kurstype=" + kurstype +
-                ", lehre=" + lehre +
-                ", schulerSet=" + schulerSet +
-                '}';
     }
 }

@@ -1,15 +1,17 @@
 package com.educom.restclient.model;
 
+import java.io.Serializable;
+import java.time.LocalDate;
 import java.util.Date;
-import java.util.List;
 
 
-public class Vertrag {
+public class Vertrag implements Serializable {
 
     private long id;
+
     private Date vertragsdatum;
-    private Date vertragsbegin;
-    private Date vertragsende;
+    private LocalDate vertragsbegin;
+    private LocalDate vertragsende;
     private ZahlungsType zahlungstype;
     private Double einmaligeKosten;
     private Double anmeldegebuhr;
@@ -20,26 +22,24 @@ public class Vertrag {
     private int rabat;
     private int rabatPercent;
 
+
     private Schuler schuler;
 
-    private List<Kurs> kursList;
 
-    public Vertrag(long id, Date vertragsdatum, Date vertragsbegin, Date vertragsende, ZahlungsType zahlungstype, Double einmaligeKosten, Double anmeldegebuhr, Double materialprice, Double totalprice, Double monatlischeRate, Double restbetrag, int rabat, int rabatPercent, Schuler schuler, List<Kurs> kursList) {
+    public Vertrag(long id, Date vertragsdatum, ZahlungsType zahlungstype, Double einmaligeKosten, Double anmeldegebuhr, Double materialprice, Double summe, Double monatlischeRate, Double restbetrag, int rabat, int rabatPercent, Schuler schuler) {
         this.id = id;
         this.vertragsdatum = vertragsdatum;
-        this.vertragsbegin = vertragsbegin;
-        this.vertragsende = vertragsende;
         this.zahlungstype = zahlungstype;
         this.einmaligeKosten = einmaligeKosten;
         this.anmeldegebuhr = anmeldegebuhr;
         this.materialprice = materialprice;
-        this.summe = totalprice;
+        this.summe = summe;
         this.monatlischeRate = monatlischeRate;
         this.restbetrag = restbetrag;
         this.rabat = rabat;
         this.rabatPercent = rabatPercent;
         this.schuler = schuler;
-        this.kursList = kursList;
+
     }
 
     public Vertrag() {
@@ -61,19 +61,19 @@ public class Vertrag {
         this.vertragsdatum = vertragsdatum;
     }
 
-    public Date getVertragsbegin() {
+    public LocalDate getVertragsbegin() {
         return vertragsbegin;
     }
 
-    public void setVertragsbegin(Date vertragsbegin) {
+    public void setVertragsbegin(LocalDate vertragsbegin) {
         this.vertragsbegin = vertragsbegin;
     }
 
-    public Date getVertragsende() {
+    public LocalDate getVertragsende() {
         return vertragsende;
     }
 
-    public void setVertragsende(Date vertragsende) {
+    public void setVertragsende(LocalDate vertragsende) {
         this.vertragsende = vertragsende;
     }
 
@@ -113,8 +113,8 @@ public class Vertrag {
         return summe;
     }
 
-    public void setSumme(Double summe) {
-        this.summe = summe;
+    public void setSumme(Double totalprice) {
+        this.summe = totalprice;
     }
 
     public Double getMonatlischeRate() {
@@ -155,13 +155,5 @@ public class Vertrag {
 
     public void setSchuler(Schuler schuler) {
         this.schuler = schuler;
-    }
-
-    public List<Kurs> getKursList() {
-        return kursList;
-    }
-
-    public void setKursList(List<Kurs> kursList) {
-        this.kursList = kursList;
     }
 }

@@ -3,6 +3,7 @@
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.DatePicker?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.RadioButton?>
 <?import javafx.scene.control.Separator?>
@@ -38,6 +39,23 @@
                   <TextField fx:id="tfKursName" />
                   <Label text="Raum" />
                   <ComboBox fx:id="cbxRaum" prefHeight="28.0" prefWidth="454.0" />
+                  <HBox>
+                     <children>
+                        <Label prefHeight="18.0" prefWidth="64.0" text="Ab" />
+                        <DatePicker fx:id="dtpAnfangAb" prefHeight="26.0" prefWidth="164.0" />
+                        <Label alignment="CENTER" contentDisplay="CENTER" layoutX="10.0" layoutY="10.0" prefHeight="18.0" prefWidth="62.0" text="Bis" textAlignment="CENTER" />
+                        <DatePicker fx:id="dtpEndeBis" prefHeight="26.0" prefWidth="167.0" />
+                     </children>
+                  </HBox>
+                  <HBox>
+                     <children>
+                        <Label prefHeight="18.0" prefWidth="70.0" text="Dauer" />
+                        <TextField fx:id="tfDauer" />
+                        <Label prefHeight="18.0" prefWidth="62.0" text="Kurslang" />
+                        <TextField fx:id="tfKurslang" prefHeight="26.0" prefWidth="164.0" />
+                     </children>
+                  </HBox>
+                  <ComboBox fx:id="cbKursType" prefHeight="28.0" prefWidth="449.0" />
                   <Label text="Lehre" />
                   <ComboBox fx:id="cbxLehre" prefHeight="28.0" prefWidth="459.0" />
                   <HBox prefHeight="12.0" prefWidth="288.0">

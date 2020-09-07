@@ -3,9 +3,7 @@ package com.educom.restclient.client;
 import com.educom.restclient.model.Vertrag;
 import com.educom.restclient.ui.controller.LoginController;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
 import org.springframework.web.client.RestTemplate;
 
 import java.net.URI;
@@ -14,11 +12,11 @@ import java.util.*;
 
 public class VertragClient implements HttpService<Vertrag> {
     static final String URL_UPDATE_Vertrag = "http://localhost:8082/api/vertrag/updatevertrag/{id}";
-    static final String URL_FINDBYLASTNAME = "http://localhost:8082/api/vertrag/findByLastName/{lastname}";
+    static final String URL_ELTERNNAME = "http://localhost:8082/api/vertrag/findbyelternname/{elternname}";
     static final String URL_FINDBYFIRSNAME = "http://localhost:8082/api/vertrag/findByName/{firstname}";
     static final String URL_FINDBYEMAIL = "http://localhost:8082/api/vertrag/findByEmail/{email}";
     static final String URL_DELETEBYID = "http://localhost:8082/api/vertrag/deletebyId/{id}";
-    static final String URL_ADDVertrag = "http://localhost:8082/api/vertrag/vertrag";
+    static final String URL_ADDVertrag = "http://localhost:8082/api/vertrag/add";
     static final String URL_VertragLIST = "http://localhost:8082/api/vertrag/vertraglist";
     static final String URL_GETBYID = "http://localhost:8082/api/vertrag/{id}";
 
@@ -56,8 +54,17 @@ public class VertragClient implements HttpService<Vertrag> {
                 urlParameters);
         return entity.getBody() != null ? Arrays.asList(entity.getBody()) : Collections.emptyList();
 
-    }
+    }//geri dönüs json objesi farkli.düzeltilmesi gerekir
+    public List<Vertrag> findByEltern(String elternname) {
+        final String uri = URL_ELTERNNAME;
+        Map<String, String> urlParameters = new HashMap<>();
+        urlParameters.put("elternname", elternname);
+        HttpEntity<Vertrag> entity = new HttpEntity<Vertrag>(getHeader());
+        ResponseEntity<Vertrag[]> response = restTemplate.exchange(uri,
+                HttpMethod.GET, entity, Vertrag[].class,urlParameters);
+        return entity.getBody() != null ? Arrays.asList((response.getBody())) :  Collections.emptyList();
 
+    }
 
     public String update(Long id, Vertrag vertrag) {
         final String uri = URL_UPDATE_Vertrag;
@@ -81,25 +88,26 @@ public class VertragClient implements HttpService<Vertrag> {
             e.printStackTrace();
         }
         System.out.println(vertrag);
-  //      ResponseEntity<Vertrag> result = restTemplate.postForEntity(uri, vertrag, String.class);
-        //return result;
-        return null;
+        HttpEntity<Vertrag> entity = new HttpEntity<Vertrag>(vertrag, getHeader());
+        String response = restTemplate.postForObject(uri, entity, String.class);
+        return response;
+
     }
 
 
 
     public List<Vertrag> getAllVertrag() {
         final String uri = URL_VertragLIST;
-
-        ResponseEntity<List<Vertrag>> Vertraglist = restTemplate.getForObject(uri,
-                ResponseEntity.class
-        );
-        return  Vertraglist.getBody();
+        restTemplate = new RestTemplate();
+        HttpEntity<Vertrag> entity = new HttpEntity<Vertrag>(getHeader());
+        ResponseEntity<Vertrag[]> response = restTemplate.exchange(URL_VertragLIST,
+                HttpMethod.GET, entity, Vertrag[].class);
+        return response.getBody() != null ? Arrays.asList(entity.getBody()) : Collections.emptyList();
     }
+
 
     @Override
     public HttpHeaders getHeader() {
-
         HttpHeaders headers = new HttpHeaders();
         String authHeader = "Bearer " + LoginController.authenticationText;
         headers.set(HttpHeaders.AUTHORIZATION, authHeader);
@@ -109,4 +117,13 @@ public class VertragClient implements HttpService<Vertrag> {
         return headers;
     }
 
+    public List<Vertrag> findBySchuler(String param) {
+        final String uri = URL_ELTERNNAME;
+        Map<String, String> urlParameters = new HashMap<>();
+        urlParameters.put("elternname", param);
+        ResponseEntity<Vertrag[]> entity = restTemplate.getForEntity(uri,
+                Vertrag[].class,
+                urlParameters);
+        return entity.getBody() != null ? Arrays.asList(entity.getBody()) : Collections.emptyList();
+    }
 }

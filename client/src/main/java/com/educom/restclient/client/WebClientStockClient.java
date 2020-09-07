@@ -9,7 +9,6 @@ import lombok.extern.log4j.Log4j2;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Flux;
@@ -20,7 +19,6 @@ import java.net.URISyntaxException;
 import java.time.Duration;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.function.Consumer;
 
 
 @Log4j2
@@ -43,6 +41,18 @@ public class WebClientStockClient implements StockClient {
                 .retryBackoff(5, Duration.ofSeconds(1), Duration.ofSeconds(5))
                 .doOnError(IOException.class,
                         e -> log.info(() -> "Closing stream for " + id + ". Received " + e.getMessage()));
+    }
+
+    public Flux<Vertrag> getVertragByEltern(String name) {
+        log.info("WebClientStockClient");
+        return webClient.get()
+                .uri("localhost:8082/api/vertrag/findbyelternname/{elternname}", name)
+                .header("Authorization", "Bearer " + LoginController.authenticationText)
+                .retrieve()
+                .bodyToFlux(Vertrag.class)
+                .retryBackoff(5, Duration.ofSeconds(1), Duration.ofSeconds(5))
+                .doOnError(IOException.class,
+                        e -> log.info(() -> "Closing stream for " + name + ". Received " + e.getMessage()));
     }
 
     @Override
@@ -82,7 +92,29 @@ public class WebClientStockClient implements StockClient {
                 .doOnError(IOException.class,
                         e -> log.info(() -> "Closing stream for " + ". Received " + e.getMessage()));
     }
-
+    //
+    public Flux<Vertrag> getVertragById(Long id) {
+        log.info("WebClientStockClient");
+        return webClient.get()
+                .uri("localhost:8082/api/vertrag/getbyId/{id}",id)
+                .header("Authorization", "Bearer " + LoginController.authenticationText)
+                .retrieve()
+                .bodyToFlux(Vertrag.class)
+                .retryBackoff(5, Duration.ofSeconds(1), Duration.ofSeconds(5))
+                .doOnError(IOException.class,
+                        e -> log.info(() -> "Closing stream for " + ". Received " + e.getMessage()));
+    }
+    public Flux<Vertrag> getVertragList() {
+        log.info("WebClientStockClient");
+        return webClient.get()
+                .uri("localhost:8082/api/vertrag/vertraglist")
+                .header("Authorization", "Bearer " + LoginController.authenticationText)
+                .retrieve()
+                .bodyToFlux(Vertrag.class)
+                .retryBackoff(5, Duration.ofSeconds(1), Duration.ofSeconds(5))
+                .doOnError(IOException.class,
+                        e -> log.info(() -> "Closing stream for " + ". Received " + e.getMessage()));
+    }
     @Override
     public Flux<Lehre>  delete(Lehre lehre) {
         log.info("WebClientStockClient");
