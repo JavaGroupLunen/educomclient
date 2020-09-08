@@ -70,14 +70,13 @@ public class Schuler extends Person{
 
     @Override
     public String toString() {
-        return "Schuler{" +
-                "vater='" + vater + '\'' +
+        return
+                ", vorname='" + firstName + '\'' +
+                ", nachname='" + lastName + '\'' +
+                ", vater='" + vater + '\'' +
                 ", mutter='" + mutter + '\'' +
                 ", schule=" + schule +
                 ", kurses=" + kurses +
-                ", id=" + id +
-                ", firstName='" + firstName + '\'' +
-                ", lastName='" + lastName + '\'' +
                 ", email='" + email + '\'' +
                 ", phoneNumber='" + phoneNumber + '\'' +
                 ", gender=" + gender +
@@ -85,7 +84,7 @@ public class Schuler extends Person{
                 ", adres='" + adresse + '\'' +
                 ", stadt='" + stadt + '\'' +
                 ", land='" + land + '\'' +
-                ", plz='" + plz + '\'' +
-                '}';
+                ", plz='" + plz + '\''
+                ;
     }
 }

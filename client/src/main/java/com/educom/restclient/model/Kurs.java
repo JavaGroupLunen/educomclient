@@ -17,7 +17,6 @@ public class Kurs implements Serializable {
     private LocalDate anfangAb;
     private LocalDate endeBis;
     private KursType kurstype;
-
     private Lehre lehre;
 
     private Set<Schuler> schulerSet = new HashSet<>();

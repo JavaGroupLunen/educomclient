@@ -184,8 +184,6 @@ public class VertragContoller implements Initializable {
         getAllVertrage();
     }
 
-
-
 //    private void fillTableview() {
 //        if (tfVertragSearch.getText().trim().isEmpty()) {
 //            getAllVertrage();
@@ -238,10 +236,8 @@ public class VertragContoller implements Initializable {
                 System.out.println(" Text Changed to  " + newValue + "\n");
                 if (!newValue.trim().isEmpty()) {
                     findBy(newValue);
-
                 }
                    fillVertragTableview();
-
             }
         });
          ToggleGroup searchKursGroup = new ToggleGroup();
@@ -254,15 +250,16 @@ public class VertragContoller implements Initializable {
     private void findBy(String param) {
         vertragClient = new VertragClient(restTemplate);
         if (rbtVertragnum.isSelected()) {
-            list = new WebClientStockClient(webClient).getVertragById(Long.valueOf(param)).collectList().block();;
+            list = new WebClientStockClient(webClient).getVertragById(Long.valueOf(param)).collectList().block();
         } else if (rbtSchuler.isSelected()) {
-            list = vertragClient.findBySchuler(param);
+            list = new WebClientStockClient(webClient).getSchulerByName(param).collectList().block();
         } else if (rbtEltern.isSelected()) {
             list = new WebClientStockClient(webClient).getVertragByEltern(param).collectList().block();
         }else if (rbtStatus.isSelected()) {
            // list = vertragClient.findByStatus(param);
     }
     }
+
     @FXML
     private void addToKursAuswahlTable() {
         if(selectedKurse!=null) {
@@ -287,7 +284,6 @@ public class VertragContoller implements Initializable {
         kurssAuswahlData = FXCollections.observableList(selectedKursList).sorted();
         tbwAngemeldeteKurse.setItems(kurssAuswahlData);
         tbwAngemeldeteKurse.refresh();
-
     }
 
 
@@ -327,6 +323,7 @@ public class VertragContoller implements Initializable {
         vertragsDatei = FXCollections.observableList(list).sorted();
         tbwVertrag.setItems(vertragsDatei);
     }
+
     @FXML
     private void loadKursAuswahFenster(ActionEvent event) throws IOException {
         vertragWindows = (Stage) ((Node) event.getSource()).getScene().getWindow();
@@ -360,7 +357,6 @@ public class VertragContoller implements Initializable {
 
     private void getAllVertrage() {
         list = new WebClientStockClient(webClient).getVertragList().collectList().block();
-
     }
 
     @Override
@@ -379,6 +375,5 @@ public class VertragContoller implements Initializable {
 
     public void expendAccordion() {
         accordion.setExpandedPane(tpKursinformationen);
-
     }
 }

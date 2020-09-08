@@ -3,6 +3,7 @@ package com.educom.restclient.ui.controller;
 import com.educom.restclient.client.KursClient;
 import com.educom.restclient.client.WebClientStockClient;
 import com.educom.restclient.model.Kurs;
+import com.educom.restclient.model.KursType;
 import com.educom.restclient.model.Lehre;
 import com.educom.restclient.model.Schuler;
 import com.educom.restclient.util.ActionButtonTableCell;
@@ -22,6 +23,8 @@ import org.springframework.web.client.RestTemplate;
 import org.springframework.web.reactive.function.client.WebClient;
 
 import java.net.URL;
+import java.time.LocalDate;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.ResourceBundle;
@@ -34,14 +37,14 @@ public class KursController implements Initializable {
     private AnchorPane rootPane;
     private final WebClient webClient = WebClient.builder().build();
     private final RestTemplate restTemplate = new RestTemplate();
-//    @Value("classpath:/lehre.fxml")
-//    Resource  resource;
     @FXML
     private TableColumn clmDelete, clmUpdate;
     @FXML
     private TextField tfKursName;
     @FXML
     private ComboBox<String> cbxRaum;
+    @FXML
+    private ComboBox<KursType> cbxUnterrichttype;
     @FXML
     private ComboBox<Lehre> cbxLehre;
     @FXML
@@ -51,15 +54,15 @@ public class KursController implements Initializable {
     @FXML
     private RadioButton rbtLehre;
     @FXML
-    private TextField tfKursSearch;
+    private TextField tfKursSearch,tfDauer,tfKurslang,tfPrice;
     @FXML
     private TableView tbwKurs;
     @FXML
     private TableColumn<Kurs, String> clmKursName, clmRaum, clmLehre;
     private TableColumn<Schuler, Integer> clmLange=new TableColumn<>("kurslange");
     private TableColumn<Schuler, Integer> clmDauern=new TableColumn<>("kursdauern");
-    private TableColumn<Schuler, Date> clmBeginAb=new TableColumn<>("kursbegin ab");
-    private TableColumn<Schuler, Date> clmEndeBis=new TableColumn<>("kursende");
+    private TableColumn<Schuler, LocalDate> clmBeginAb=new TableColumn<>("kursbegin ab");
+    private TableColumn<Schuler, LocalDate> clmEndeBis=new TableColumn<>("kursende");
     @FXML
     private Button btnAdd;
     @FXML
@@ -77,6 +80,9 @@ public class KursController implements Initializable {
     @FXML
     private RadioButton rbtSchulerEmail;
     @FXML
+    private DatePicker dtpAnfangAb,dtpEndeBis;
+
+    @FXML
     private TextField tfSchulerSearch;
     private ObservableList<Kurs> kurssData = observableArrayList();
     private List<Kurs> list = null;
@@ -90,8 +96,13 @@ public class KursController implements Initializable {
         Kurs kurs = new Kurs(tfKursName.getText(), null, null);
         kurs.setRaum(cbxRaum.getValue());
         kurs.setLehre(cbxLehre.getValue());
+        kurs.setAnfangAb(dtpAnfangAb.getValue());
+        kurs.setEndeBis(dtpEndeBis.getValue());
+        kurs.setDauer(Integer.valueOf(tfDauer.getText()));
+        kurs.setKurslang(Integer.valueOf(tfKurslang.getText()));
+        kurs.setKurstype(cbxUnterrichttype.getValue());
+        kurs.setKosten(Double.valueOf(tfPrice.getText()));
         kursClient = new KursClient();
-        System.out.println(kurs);
         kursClient.add(kurs);
         getAllKurs();
         fillTableview();
@@ -101,6 +112,10 @@ public class KursController implements Initializable {
         ObservableList<Lehre> lehreObservableList =FXCollections.observableList(getAllLehre());
         cbxLehre.setItems(lehreObservableList);
 
+}
+void fillUnterrichttypeComboBox(){
+       ObservableList<KursType> kursTypeList =FXCollections.observableList( Arrays.asList(KursType.values()));
+        cbxUnterrichttype.setItems(kursTypeList);
 }
 
     private   List<Lehre>  getAllLehre() {

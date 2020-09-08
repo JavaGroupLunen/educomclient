@@ -49,13 +49,26 @@
                   </HBox>
                   <HBox>
                      <children>
+                        <Label prefHeight="18.0" prefWidth="74.0" text="Kosten" />
+                        <TextField fx:id="tfPrice" prefHeight="26.0" prefWidth="95.0" />
                         <Label prefHeight="18.0" prefWidth="70.0" text="Dauer" />
-                        <TextField fx:id="tfDauer" />
-                        <Label prefHeight="18.0" prefWidth="62.0" text="Kurslang" />
-                        <TextField fx:id="tfKurslang" prefHeight="26.0" prefWidth="164.0" />
+                        <TextField fx:id="tfDauer" prefHeight="26.0" prefWidth="78.0" />
+                        <Label prefHeight="18.0" prefWidth="78.0" text="Kurslang" />
+                        <TextField fx:id="tfKurslang" prefHeight="26.0" prefWidth="105.0" />
                      </children>
                   </HBox>
-                  <ComboBox fx:id="cbKursType" prefHeight="28.0" prefWidth="449.0" />
+                  <HBox prefHeight="39.0" prefWidth="440.0">
+                     <children>
+                        <Label prefHeight="18.0" prefWidth="163.0" text="Unterrichtsform" />
+                        <ComboBox fx:id="cbxUnterrichttype" prefHeight="28.0" prefWidth="275.0" />
+                     </children>
+                     <opaqueInsets>
+                        <Insets />
+                     </opaqueInsets>
+                     <VBox.margin>
+                        <Insets bottom="5.0" top="5.0" />
+                     </VBox.margin>
+                  </HBox>
                   <Label text="Lehre" />
                   <ComboBox fx:id="cbxLehre" prefHeight="28.0" prefWidth="459.0" />
                   <HBox prefHeight="12.0" prefWidth="288.0">

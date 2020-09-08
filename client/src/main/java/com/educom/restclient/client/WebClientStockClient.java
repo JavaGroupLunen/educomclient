@@ -24,7 +24,7 @@ import java.util.Collections;
 @Log4j2
 public class WebClientStockClient implements StockClient {
     private final WebClient webClient;
-
+    static final String URL_ELTERNNAME = "http://localhost:8082/api/vertrag/findbyschuler/{name}";
     public WebClientStockClient(WebClient webClient) {
         this.webClient = webClient;
     }
@@ -54,7 +54,17 @@ public class WebClientStockClient implements StockClient {
                 .doOnError(IOException.class,
                         e -> log.info(() -> "Closing stream for " + name + ". Received " + e.getMessage()));
     }
-
+    public Flux<Vertrag> getSchulerByName(String name) {
+        log.info("WebClientStockClient");
+        return webClient.get()
+                .uri(URL_ELTERNNAME, name)
+                .header("Authorization", "Bearer " + LoginController.authenticationText)
+                .retrieve()
+                .bodyToFlux(Vertrag.class)
+                .retryBackoff(5, Duration.ofSeconds(1), Duration.ofSeconds(5))
+                .doOnError(IOException.class,
+                        e -> log.info(() -> "Closing stream for " + name + ". Received " + e.getMessage()));
+    }
     @Override
     public Flux<Lehre> getLehreList() {
         System.out.println(LoginController.authenticationText);
@@ -148,7 +158,6 @@ public class WebClientStockClient implements StockClient {
     }
 
     public HttpHeaders getHeader() {
-
         HttpHeaders headers = new HttpHeaders();
         String authHeader = "Bearer " + LoginController.authenticationText;
         headers.set(HttpHeaders.AUTHORIZATION, authHeader);

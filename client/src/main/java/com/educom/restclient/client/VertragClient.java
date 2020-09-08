@@ -12,7 +12,7 @@ import java.util.*;
 
 public class VertragClient implements HttpService<Vertrag> {
     static final String URL_UPDATE_Vertrag = "http://localhost:8082/api/vertrag/updatevertrag/{id}";
-    static final String URL_ELTERNNAME = "http://localhost:8082/api/vertrag/findbyelternname/{elternname}";
+    static final String URL_ELTERNNAME = "http://localhost:8082/api/vertrag/findbyschuler/{name}";
     static final String URL_FINDBYFIRSNAME = "http://localhost:8082/api/vertrag/findByName/{firstname}";
     static final String URL_FINDBYEMAIL = "http://localhost:8082/api/vertrag/findByEmail/{email}";
     static final String URL_DELETEBYID = "http://localhost:8082/api/vertrag/deletebyId/{id}";
@@ -54,7 +54,7 @@ public class VertragClient implements HttpService<Vertrag> {
                 urlParameters);
         return entity.getBody() != null ? Arrays.asList(entity.getBody()) : Collections.emptyList();
 
-    }//geri dönüs json objesi farkli.düzeltilmesi gerekir
+    }
     public List<Vertrag> findByEltern(String elternname) {
         final String uri = URL_ELTERNNAME;
         Map<String, String> urlParameters = new HashMap<>();
@@ -70,7 +70,6 @@ public class VertragClient implements HttpService<Vertrag> {
         final String uri = URL_UPDATE_Vertrag;
         Map<String, String> params = new HashMap<String, String>();
         params.put("id", String.valueOf(id));
-
         RestTemplate restTemplate = new RestTemplate();
         restTemplate.put(uri, vertrag, params);
         return "updated";
@@ -117,13 +116,4 @@ public class VertragClient implements HttpService<Vertrag> {
         return headers;
     }
 
-    public List<Vertrag> findBySchuler(String param) {
-        final String uri = URL_ELTERNNAME;
-        Map<String, String> urlParameters = new HashMap<>();
-        urlParameters.put("elternname", param);
-        ResponseEntity<Vertrag[]> entity = restTemplate.getForEntity(uri,
-                Vertrag[].class,
-                urlParameters);
-        return entity.getBody() != null ? Arrays.asList(entity.getBody()) : Collections.emptyList();
-    }
 }
