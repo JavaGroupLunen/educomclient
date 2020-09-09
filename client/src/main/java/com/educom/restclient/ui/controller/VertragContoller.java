@@ -203,7 +203,7 @@ public class VertragContoller implements Initializable {
         tfName.setText("");
         tfEmail.setText("");
         tfAdresse.setText("");
-        tfGeburstdatum.setText("");
+        //tfGeburstdatum.setText("");
         tfTel.setText("");
         tfPlz.setText("");
         tfStadt.setText("");

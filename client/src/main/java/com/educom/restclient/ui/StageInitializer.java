@@ -31,7 +31,7 @@ public class StageInitializer implements ApplicationListener<StockChartApplicati
 
         try {
             Stage stage = stageReadyEvent.getStage();
-            stage.initStyle(StageStyle.UNDECORATED);
+            stage.initStyle(StageStyle.DECORATED);
             FXMLLoader fxmlLoader = new FXMLLoader(getChartResource().getURL());
             fxmlLoader.setControllerFactory(aClass -> this.applicationContext.getBean(aClass));
             Parent load = fxmlLoader.load();

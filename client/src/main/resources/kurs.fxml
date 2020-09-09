@@ -86,6 +86,7 @@
                         <TableColumn fx:id="clmKursName" prefWidth="75.0" text="Kursname" />
                         <TableColumn fx:id="clmRaum" prefWidth="75.0" text="Raum" />
                         <TableColumn fx:id="clmLehre" prefWidth="75.0" text="Lehre" />
+                        <TableColumn fx:id="clmKurstype" prefWidth="75.0" text="Unterrichtsform" />
                      </columns>
                   </TableView>
                </children>

@@ -1,12 +1,11 @@
 package com.educom.restclient.model;
 
-import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.Set;
 
 
-public class Kurs implements Serializable {
+public class Kurs  {
 
     private long id;
     private String name;

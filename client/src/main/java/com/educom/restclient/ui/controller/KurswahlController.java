@@ -25,7 +25,7 @@ import org.springframework.web.reactive.function.client.WebClient;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.net.URL;
-import java.util.Date;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.ResourceBundle;
 
@@ -48,7 +48,7 @@ public class KurswahlController implements Initializable {
     @FXML
     private TableColumn<Kurs, Integer> clmLange, clmDauern;
     @FXML
-    private TableColumn<Kurs, Date> clmBeginAb, clmEndeBis;
+    private TableColumn<Kurs, LocalDate> clmBeginAb, clmEndeBis;
     private  TableColumn chKursWahl = new TableColumn<>("Kurswahl");
     private ObservableList<Kurs> kurssData = observableArrayList();
     private List<Kurs> list = null;

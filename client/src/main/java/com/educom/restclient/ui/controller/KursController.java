@@ -24,7 +24,6 @@ import org.springframework.web.reactive.function.client.WebClient;
 
 import java.net.URL;
 import java.time.LocalDate;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.ResourceBundle;
@@ -33,10 +32,10 @@ import static javafx.collections.FXCollections.observableArrayList;
 
 @Component
 public class KursController implements Initializable {
-    @FXML
-    private AnchorPane rootPane;
     private final WebClient webClient = WebClient.builder().build();
     private final RestTemplate restTemplate = new RestTemplate();
+    @FXML
+    private AnchorPane rootPane;
     @FXML
     private TableColumn clmDelete, clmUpdate;
     @FXML
@@ -54,15 +53,15 @@ public class KursController implements Initializable {
     @FXML
     private RadioButton rbtLehre;
     @FXML
-    private TextField tfKursSearch,tfDauer,tfKurslang,tfPrice;
+    private TextField tfKursSearch, tfDauer, tfKurslang, tfPrice;
     @FXML
     private TableView tbwKurs;
     @FXML
-    private TableColumn<Kurs, String> clmKursName, clmRaum, clmLehre;
-    private TableColumn<Schuler, Integer> clmLange=new TableColumn<>("kurslange");
-    private TableColumn<Schuler, Integer> clmDauern=new TableColumn<>("kursdauern");
-    private TableColumn<Schuler, LocalDate> clmBeginAb=new TableColumn<>("kursbegin ab");
-    private TableColumn<Schuler, LocalDate> clmEndeBis=new TableColumn<>("kursende");
+    private TableColumn<Kurs, String> clmKursName, clmRaum, clmLehre, clmKurstype;
+    private final TableColumn<Schuler, Integer> clmLange = new TableColumn<>("kurslange");
+    private final TableColumn<Schuler, Integer> clmDauern = new TableColumn<>("kursdauern");
+    private final TableColumn<Schuler, LocalDate> clmBeginAb = new TableColumn<>("beginAb");
+    private final TableColumn<Schuler, LocalDate> clmEndeBis = new TableColumn<>("endeBis");
     @FXML
     private Button btnAdd;
     @FXML
@@ -80,7 +79,7 @@ public class KursController implements Initializable {
     @FXML
     private RadioButton rbtSchulerEmail;
     @FXML
-    private DatePicker dtpAnfangAb,dtpEndeBis;
+    private DatePicker dtpAnfangAb, dtpEndeBis;
 
     @FXML
     private TextField tfSchulerSearch;
@@ -108,24 +107,27 @@ public class KursController implements Initializable {
         fillTableview();
         clearField();
     }
-    void fillLehreComboBox(){
-        ObservableList<Lehre> lehreObservableList =FXCollections.observableList(getAllLehre());
+
+    void fillLehreComboBox() {
+        ObservableList<Lehre> lehreObservableList = FXCollections.observableList(getAllLehre());
         cbxLehre.setItems(lehreObservableList);
 
-}
-void fillUnterrichttypeComboBox(){
-       ObservableList<KursType> kursTypeList =FXCollections.observableList( Arrays.asList(KursType.values()));
-        cbxUnterrichttype.setItems(kursTypeList);
-}
+    }
 
-    private   List<Lehre>  getAllLehre() {
-     return new WebClientStockClient(webClient).getLehreList().collectList().block();
+    void fillUnterrichttypeComboBox() {
+        cbxUnterrichttype.setItems(FXCollections.observableArrayList(KursType.values()));
+    }
+
+    private List<Lehre> getAllLehre() {
+        return new WebClientStockClient(webClient).getLehreList().collectList().block();
 
     }
-    void fillRaumComboBox(){
-    ObservableList<String> raumlist =FXCollections.observableList(List.of("Raum 1","Raum 2")).sorted();
+
+    void fillRaumComboBox() {
+        ObservableList<String> raumlist = FXCollections.observableList(List.of("Raum 1", "Raum 2")).sorted();
         cbxRaum.setItems(raumlist);
-}
+    }
+
     @FXML
     void saveAction(ActionEvent event) {
         Kurs updatedKurs = new Kurs();
@@ -139,8 +141,6 @@ void fillUnterrichttypeComboBox(){
 
     private void getAllKurs() {
         list = new WebClientStockClient(webClient).getKursList().collectList().block();
-//       kursClient= new KursClient();
-//       list=kursClient.getAllKurs();
     }
 
     private void fillTableview() {
@@ -173,6 +173,7 @@ void fillUnterrichttypeComboBox(){
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+        fillUnterrichttypeComboBox();
         fillRaumComboBox();
         fillLehreComboBox();
         tbwKurs.setEditable(true);
@@ -182,8 +183,10 @@ void fillUnterrichttypeComboBox(){
         clmLehre.setCellValueFactory(new PropertyValueFactory("lehre"));
         clmLange.setCellValueFactory(new PropertyValueFactory("kurslang"));
         clmDauern.setCellValueFactory(new PropertyValueFactory("dauer"));
+        clmKurstype.setCellValueFactory(new PropertyValueFactory("kurstype"));
         clmBeginAb.setCellValueFactory(new PropertyValueFactory("anfangAb)"));
         clmEndeBis.setCellValueFactory(new PropertyValueFactory("endeBis)"));
+
         clmDelete.setCellFactory(ActionButtonTableCell.forTableColumn("Delete", (Kurs p) -> {
             deleteClient(p.getId());
             return p;
@@ -194,7 +197,7 @@ void fillUnterrichttypeComboBox(){
             return p;
         }));
         tbwKurs.getItems().setAll(kurssData);
-        tbwKurs.getColumns().setAll( clmKursName,clmRaum,clmLehre,clmLange,clmDauern,clmBeginAb,clmEndeBis,clmDelete, clmUpdate);
+        tbwKurs.getColumns().setAll(clmKursName, clmRaum, clmLehre, clmLange, clmDauern, clmBeginAb, clmEndeBis, clmDelete, clmUpdate);
         fillTableview();
         tfKursSearch.textProperty().addListener(new ChangeListener<String>() {
             @Override
@@ -217,9 +220,9 @@ void fillUnterrichttypeComboBox(){
     }
 
     private void clearField() {
-tfKursName.setText("");
-clmLehre.setText("");
-clmRaum.setText("");
+        tfKursName.setText("");
+        clmLehre.setText("");
+        clmRaum.setText("");
 
     }
 
