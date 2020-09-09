@@ -33,7 +33,7 @@
             <RowConstraints maxHeight="559.0" minHeight="10.0" prefHeight="34.0" vgrow="SOMETIMES" />
          </rowConstraints>
          <children>
-            <VBox prefHeight="526.0" prefWidth="492.0" spacing="5.0" GridPane.rowIndex="3">
+            <VBox prefHeight="526.0" prefWidth="492.0" spacing="20.0" GridPane.rowIndex="3">
                <children>
                   <Label text="Kursname" />
                   <TextField fx:id="tfKursName" />
@@ -71,24 +71,6 @@
                   </HBox>
                   <Label text="Lehre" />
                   <ComboBox fx:id="cbxLehre" prefHeight="28.0" prefWidth="459.0" />
-                  <HBox prefHeight="12.0" prefWidth="288.0">
-                     <children>
-                        <RadioButton fx:id="rbtKursName" mnemonicParsing="false" prefHeight="18.0" prefWidth="210.0" text="Kursname" />
-                        <RadioButton fx:id="rbtRaum" mnemonicParsing="false" prefHeight="18.0" prefWidth="226.0" text="Raum" />
-                        <RadioButton fx:id="rbtLehre" mnemonicParsing="false" prefHeight="18.0" prefWidth="136.0" text="Lehre" />
-                     </children>
-                  </HBox>
-                  <TextField fx:id="tfKursSearch" />
-                  <TableView fx:id="tbwKurs" prefHeight="485.0" prefWidth="598.0">
-                     <columns>
-                        <TableColumn fx:id="clmKursUpdate" prefWidth="75.0" text="Update" />
-                        <TableColumn fx:id="clmKursDelete" prefWidth="75.0" text="Delete" />
-                        <TableColumn fx:id="clmKursName" prefWidth="75.0" text="Kursname" />
-                        <TableColumn fx:id="clmRaum" prefWidth="75.0" text="Raum" />
-                        <TableColumn fx:id="clmLehre" prefWidth="75.0" text="Lehre" />
-                        <TableColumn fx:id="clmKurstype" prefWidth="75.0" text="Unterrichtsform" />
-                     </columns>
-                  </TableView>
                </children>
                <opaqueInsets>
                   <Insets left="20.0" right="20.0" />
@@ -97,7 +79,7 @@
                   <Insets />
                </GridPane.margin>
                <padding>
-                  <Insets left="10.0" right="10.0" />
+                  <Insets bottom="20.0" left="10.0" right="10.0" top="20.0" />
                </padding>
             </VBox>
             <Label alignment="CENTER" prefHeight="51.0" prefWidth="404.0" style="-fx-background-color: #4F664;" text="Kursdetails" textAlignment="CENTER" textFill="#3f2b63" GridPane.rowIndex="2">
@@ -119,29 +101,28 @@
                   </Button>
                </children>
             </HBox>
-            <TableView fx:id="tbwSchuler" prefHeight="482.0" prefWidth="560.0" GridPane.columnIndex="1" GridPane.rowIndex="3">
+            <TableView fx:id="tbwKurs" prefHeight="485.0" prefWidth="598.0" GridPane.columnIndex="1" GridPane.rowIndex="3">
                <columns>
-                  <TableColumn fx:id="clmVorname" prefWidth="75.0" text="Vorname" />
-                  <TableColumn fx:id="clmName" prefWidth="75.0" text="Name" />
-                  <TableColumn fx:id="clmGDatum" prefWidth="75.0" text="GeburstDatum" />
-                  <TableColumn fx:id="clmEmail" prefWidth="75.0" text="e-mail" />
-                  <TableColumn fx:id="clmPhoneNumber" prefWidth="75.0" text="Tel" />
-                  <TableColumn fx:id="clmGender" prefWidth="75.0" text="Gender" />
-                  <TableColumn fx:id="clmAdres" prefWidth="75.0" text="Adress" />
-                  <TableColumn fx:id="clmPlz" prefWidth="75.0" text="PLZ" />
-                  <TableColumn fx:id="clmStadt" prefWidth="75.0" text="Stadt" />
-                  <TableColumn fx:id="clmDelete" prefWidth="75.0" text="Delete" />
                   <TableColumn fx:id="clmUpdate" prefWidth="75.0" text="Update" />
+                  <TableColumn fx:id="clmDelete" prefWidth="75.0" text="Delete" />
+                  <TableColumn fx:id="clmKursName" prefWidth="75.0" text="Kursname" />
+                  <TableColumn fx:id="clmRaum" prefWidth="75.0" text="Raum" />
+                  <TableColumn fx:id="clmBeginAb" prefWidth="75.0" text="Anfang Ab" />
+                  <TableColumn fx:id="clmEndeBis" prefWidth="75.0" text="Ende Bis" />
+                  <TableColumn fx:id="clmLehre" prefWidth="75.0" text="Lehre" />
+                  <TableColumn fx:id="clmKursType" prefWidth="75.0" text="Unterrichtsform" />
+                  <TableColumn fx:id="clmLange" prefWidth="75.0" text="KLange" />
+                  <TableColumn fx:id="clmDauern" prefWidth="75.0" text="Dauer" />
                </columns>
             </TableView>
+            <TextField fx:id="tfKursSearch" GridPane.columnIndex="1" GridPane.rowIndex="2" />
             <HBox prefHeight="12.0" prefWidth="288.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
                <children>
-                  <RadioButton fx:id="rbtSchulerVorname" mnemonicParsing="false" prefHeight="18.0" prefWidth="210.0" text="Vorname" />
-                  <RadioButton fx:id="rbtSchulerNachname" mnemonicParsing="false" prefHeight="18.0" prefWidth="226.0" text="Name" />
-                  <RadioButton fx:id="rbtSchulerEmail" mnemonicParsing="false" prefHeight="18.0" prefWidth="136.0" text="email" />
+                  <RadioButton fx:id="rbtKursName" mnemonicParsing="false" prefHeight="18.0" prefWidth="210.0" text="Kursname" />
+                  <RadioButton fx:id="rbtRaum" mnemonicParsing="false" prefHeight="18.0" prefWidth="226.0" text="Raum" />
+                  <RadioButton fx:id="rbtLehre" mnemonicParsing="false" prefHeight="18.0" prefWidth="136.0" text="Lehre" />
                </children>
             </HBox>
-            <TextField fx:id="tfSchulerSearch" GridPane.columnIndex="1" GridPane.rowIndex="2" />
          </children>
       </GridPane>
    </children>

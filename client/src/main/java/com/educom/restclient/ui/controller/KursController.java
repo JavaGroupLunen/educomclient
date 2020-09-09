@@ -5,8 +5,8 @@ import com.educom.restclient.client.WebClientStockClient;
 import com.educom.restclient.model.Kurs;
 import com.educom.restclient.model.KursType;
 import com.educom.restclient.model.Lehre;
-import com.educom.restclient.model.Schuler;
 import com.educom.restclient.util.ActionButtonTableCell;
+import com.educom.restclient.util.UtilDate;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
@@ -24,7 +24,6 @@ import org.springframework.web.reactive.function.client.WebClient;
 
 import java.net.URL;
 import java.time.LocalDate;
-import java.util.Date;
 import java.util.List;
 import java.util.ResourceBundle;
 
@@ -57,46 +56,40 @@ public class KursController implements Initializable {
     @FXML
     private TableView tbwKurs;
     @FXML
-    private TableColumn<Kurs, String> clmKursName, clmRaum, clmLehre, clmKurstype;
-    private final TableColumn<Schuler, Integer> clmLange = new TableColumn<>("kurslange");
-    private final TableColumn<Schuler, Integer> clmDauern = new TableColumn<>("kursdauern");
-    private final TableColumn<Schuler, LocalDate> clmBeginAb = new TableColumn<>("beginAb");
-    private final TableColumn<Schuler, LocalDate> clmEndeBis = new TableColumn<>("endeBis");
+    private TableColumn<Kurs, String> clmKursName, clmRaum, clmLehre, clmKursType;
+
+    @FXML
+    private TableColumn<Kurs, LocalDate> clmBeginAb;
+    @FXML
+    private TableColumn<Kurs, LocalDate> clmEndeBis;
+    @FXML
+    private TableColumn<Kurs, ?> clmLange;
+    @FXML
+    private TableColumn<Kurs, ?> clmDauern;
+
     @FXML
     private Button btnAdd;
     @FXML
     private Button btnSave;
-    @FXML
-    private TableView<Schuler> tbwSchuler;
-    @FXML
-    private TableColumn<Schuler, String> clmVorname, clmName, clmEmail, clmPhoneNumber, clmGender, clmAdres, clmPlz, clmStadt;
-    @FXML
-    private TableColumn<Schuler, Date> clmGDatum;
-    @FXML
-    private RadioButton rbtSchulerVorname;
-    @FXML
-    private RadioButton rbtSchulerNachname;
-    @FXML
-    private RadioButton rbtSchulerEmail;
+
     @FXML
     private DatePicker dtpAnfangAb, dtpEndeBis;
 
-    @FXML
-    private TextField tfSchulerSearch;
     private ObservableList<Kurs> kurssData = observableArrayList();
     private List<Kurs> list = null;
     private Long updatedKursId;
     private KursClient kursClient;
     private ApplicationContext applicationContext;
-
+    private  UtilDate utildate=new UtilDate<Kurs>();
+    private
 
     @FXML
     void addAction(ActionEvent event) {
         Kurs kurs = new Kurs(tfKursName.getText(), null, null);
         kurs.setRaum(cbxRaum.getValue());
         kurs.setLehre(cbxLehre.getValue());
-        kurs.setAnfangAb(dtpAnfangAb.getValue());
-        kurs.setEndeBis(dtpEndeBis.getValue());
+        kurs.setAnfangab(dtpAnfangAb.getValue());
+        kurs.setEndebis(dtpEndeBis.getValue());
         kurs.setDauer(Integer.valueOf(tfDauer.getText()));
         kurs.setKurslang(Integer.valueOf(tfKurslang.getText()));
         kurs.setKurstype(cbxUnterrichttype.getValue());
@@ -171,6 +164,7 @@ public class KursController implements Initializable {
     }
 
 
+
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         fillUnterrichttypeComboBox();
@@ -183,9 +177,11 @@ public class KursController implements Initializable {
         clmLehre.setCellValueFactory(new PropertyValueFactory("lehre"));
         clmLange.setCellValueFactory(new PropertyValueFactory("kurslang"));
         clmDauern.setCellValueFactory(new PropertyValueFactory("dauer"));
-        clmKurstype.setCellValueFactory(new PropertyValueFactory("kurstype"));
-        clmBeginAb.setCellValueFactory(new PropertyValueFactory("anfangAb)"));
-        clmEndeBis.setCellValueFactory(new PropertyValueFactory("endeBis)"));
+        clmKursType.setCellValueFactory(new PropertyValueFactory("kurstype"));
+        clmBeginAb.setCellValueFactory(new PropertyValueFactory<>("anfangab"));
+        clmEndeBis.setCellValueFactory(new PropertyValueFactory<>("endebis"));
+        clmBeginAb.setCellFactory((TableColumn<Kurs, LocalDate> column) ->  utildate.convertColumn(column));
+        clmEndeBis.setCellFactory((TableColumn<Kurs, LocalDate> column) -> utildate.convertColumn(column));
 
         clmDelete.setCellFactory(ActionButtonTableCell.forTableColumn("Delete", (Kurs p) -> {
             deleteClient(p.getId());
@@ -197,7 +193,7 @@ public class KursController implements Initializable {
             return p;
         }));
         tbwKurs.getItems().setAll(kurssData);
-        tbwKurs.getColumns().setAll(clmKursName, clmRaum, clmLehre, clmLange, clmDauern, clmBeginAb, clmEndeBis, clmDelete, clmUpdate);
+        tbwKurs.getColumns().setAll(clmKursName, clmRaum, clmLehre, clmLange, clmDauern,clmKursType, clmBeginAb, clmEndeBis, clmDelete, clmUpdate);
         fillTableview();
         tfKursSearch.textProperty().addListener(new ChangeListener<String>() {
             @Override
@@ -219,10 +215,17 @@ public class KursController implements Initializable {
         rbtLehre.setToggleGroup(searchKursGroup);
     }
 
+
     private void clearField() {
         tfKursName.setText("");
-        clmLehre.setText("");
-        clmRaum.setText("");
+        tfKurslang.setText("");
+        tfDauer.setText("");
+        tfPrice.setText("");
+        cbxUnterrichttype.setValue(null);
+        cbxLehre.setValue(null);
+        cbxRaum.setValue(null);
+        dtpEndeBis.setValue(null);
+        dtpAnfangAb.setValue(null);
 
     }
 
@@ -235,6 +238,17 @@ public class KursController implements Initializable {
     }
 
     private void fillFieldForUpdate(Kurs p) {
+
+        tfKursName.setText(p.getName());
+        cbxLehre.setValue(p.getLehre());
+        tfKurslang.setText(String.valueOf(p.getKurslang()));
+        tfDauer.setText(String.valueOf(p.getDauer()));
+        cbxUnterrichttype.setValue(p.getKurstype());
+        cbxLehre.setValue(p.getLehre());
+        cbxRaum.setValue(p.getRaum());
+        tfPrice.setText(String.valueOf(p.getKosten()));
+        dtpAnfangAb.setValue(p.getAnfangab());
+        dtpEndeBis.setValue(p.getEndebis());
         setUpdatedKursId(p.getId());
 
     }

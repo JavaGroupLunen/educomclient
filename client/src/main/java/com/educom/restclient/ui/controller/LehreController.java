@@ -6,6 +6,7 @@ import com.educom.restclient.client.WebClientStockClient;
 import com.educom.restclient.model.Gender;
 import com.educom.restclient.model.Lehre;
 import com.educom.restclient.util.ActionButtonTableCell;
+import com.educom.restclient.util.UtilDate;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
@@ -14,7 +15,6 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.util.StringConverter;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.reactive.function.client.WebClient;
@@ -23,8 +23,6 @@ import java.io.IOException;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
-import java.util.Date;
 import java.util.List;
 import java.util.ResourceBundle;
 
@@ -51,7 +49,7 @@ public class LehreController implements Initializable {
     @FXML
     private TableColumn clmDelete, clmUpdate;
     @FXML
-    private TableColumn<Lehre, Date> clmGDatum;
+    private TableColumn<Lehre, LocalDate> clmGDatum;
     @FXML
     private TableView<Lehre> tableView;
     @FXML
@@ -59,29 +57,7 @@ public class LehreController implements Initializable {
     @FXML
     private Button btnAdd, btnUpdate, btnDelete, btnSave, btnLehrer, btnSchuler, btnVertrag, btnKurs, btnSignOut;
 
-
-    String pattern = "dd-MM-yyyy";
-    private StringConverter converter = new StringConverter<LocalDate>() {
-        DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern(pattern);
-
-        @Override
-        public String toString(LocalDate date) {
-            if (date != null) {
-                return dateFormatter.format(date);
-            } else {
-                return "";
-            }
-        }
-
-        @Override
-        public LocalDate fromString(String string) {
-            if (string != null && !string.isEmpty()) {
-                return LocalDate.parse(string, dateFormatter);
-            } else {
-                return null;
-            }
-        }
-    };
+private UtilDate utildate=new UtilDate<Lehre>();
 
     @FXML
     private void addAction() throws IOException, URISyntaxException {
@@ -154,7 +130,7 @@ public class LehreController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        cmbGdatum.setConverter(converter);
+       // cmbGdatum.setConverter(converter);
         fillcomboBox();
         btnAdd.getStyleClass().add("button-raised");
         btnSave.getStyleClass().add("button-raised");
@@ -169,7 +145,7 @@ public class LehreController implements Initializable {
         clmAdres.setCellValueFactory(new PropertyValueFactory("adresse"));
         clmPlz.setCellValueFactory(new PropertyValueFactory("plz"));
         clmStadt.setCellValueFactory(new PropertyValueFactory("stadt"));
-
+        clmGDatum.setCellFactory((TableColumn<Lehre, LocalDate> column) -> utildate.convertColumn(column));
         clmDelete.setCellFactory(ActionButtonTableCell.forTableColumn("Delete", (Lehre p) -> {
             deleteClient(p);
             return p;

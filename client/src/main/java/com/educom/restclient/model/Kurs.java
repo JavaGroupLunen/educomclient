@@ -13,8 +13,10 @@ public class Kurs  {
     private Double kosten;
     private int dauer;
     private int kurslang;
-    private LocalDate anfangAb;
-    private LocalDate endeBis;
+    //@DateTimeFormat(pattern = "dd-MM-yyyy")
+    private LocalDate anfangab;
+   // @DateTimeFormat(pattern = "dd-MM-yyyy")
+    private LocalDate endebis;
     private KursType kurstype;
     private Lehre lehre;
 
@@ -81,20 +83,20 @@ public class Kurs  {
         this.kurslang = kurslang;
     }
 
-    public LocalDate getAnfangAb() {
-        return anfangAb;
+    public LocalDate getAnfangab() {
+        return anfangab;
     }
 
-    public void setAnfangAb(LocalDate anfangAb) {
-        this.anfangAb = anfangAb;
+    public void setAnfangab(LocalDate anfangab) {
+        this.anfangab = anfangab;
     }
 
-    public LocalDate getEndeBis() {
-        return endeBis;
+    public LocalDate getEndebis() {
+        return endebis;
     }
 
-    public void setEndeBis(LocalDate endeBis) {
-        this.endeBis = endeBis;
+    public void setEndebis(LocalDate endebis) {
+        this.endebis = endebis;
     }
 
     public KursType getKurstype() {

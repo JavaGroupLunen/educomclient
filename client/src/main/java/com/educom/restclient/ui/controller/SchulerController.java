@@ -6,6 +6,7 @@ import com.educom.restclient.client.WebClientStockClient;
 import com.educom.restclient.model.Gender;
 import com.educom.restclient.model.Schuler;
 import com.educom.restclient.util.ActionButtonTableCell;
+import com.educom.restclient.util.UtilDate;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
@@ -14,7 +15,6 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.util.StringConverter;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationContext;
 import org.springframework.core.io.Resource;
@@ -26,8 +26,6 @@ import java.io.IOException;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
-import java.util.Date;
 import java.util.List;
 import java.util.ResourceBundle;
 
@@ -51,7 +49,7 @@ public class SchulerController implements Initializable {
     @FXML
     private TableColumn clmDelete, clmUpdate;
     @FXML
-    private TableColumn<Schuler, Date> clmGDatum;
+    private TableColumn<Schuler, LocalDate> clmGDatum;
     private List<Schuler> list = null;
 
     @FXML
@@ -66,28 +64,7 @@ public class SchulerController implements Initializable {
     @Value("classpath:/lehre.fxml")
     Resource  resource;
 
-    String pattern = "dd-MM-yyyy";
-  private   StringConverter converter = new StringConverter<LocalDate>() {
-        DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern(pattern);
-
-        @Override
-        public String toString(LocalDate date) {
-            if (date != null) {
-                return dateFormatter.format(date);
-            } else {
-                return "";
-            }
-        }
-
-        @Override
-        public LocalDate fromString(String string) {
-            if (string != null && !string.isEmpty()) {
-                return LocalDate.parse(string, dateFormatter);
-            } else {
-                return null;
-            }
-        }
-    };
+private UtilDate utildate=new UtilDate<Schuler>();
 
     @FXML
     private void addAction() throws IOException, URISyntaxException {
@@ -167,7 +144,6 @@ public class SchulerController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        cmbGdatum.setConverter(converter);
         fillcomboBox();
         btnAdd.getStyleClass().add("button-raised");
         btnSave.getStyleClass().add("button-raised");
@@ -182,7 +158,7 @@ public class SchulerController implements Initializable {
         clmAdres.setCellValueFactory(new PropertyValueFactory("adresse"));
         clmPlz.setCellValueFactory(new PropertyValueFactory("plz"));
         clmStadt.setCellValueFactory(new PropertyValueFactory("stadt"));
-
+        clmGDatum.setCellFactory((TableColumn<Schuler, LocalDate> column) -> utildate.convertColumn(column));
         clmDelete.setCellFactory(ActionButtonTableCell.forTableColumn("Delete", (Schuler p) -> {
             deleteClient(p.getId());
             return p;
@@ -200,7 +176,6 @@ public class SchulerController implements Initializable {
             public void changed(ObservableValue<? extends String> observable,
                                 String oldValue, String newValue) {
 
-                System.out.println(" Text Changed to  " + newValue + "\n");
                 if (!newValue.trim().isEmpty()) {
                     findBy(newValue);
 

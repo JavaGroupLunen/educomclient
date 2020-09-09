@@ -349,8 +349,8 @@ public class VertragContoller implements Initializable {
         tfLehre.setText(auswahl.getLehre() != null ? auswahl.getLehre().toString() : "");
         tfDauer.setText(String.valueOf(auswahl.getDauer()) != null ? String.valueOf(auswahl.getDauer()) : "");
         tfKurslang.setText(String.valueOf(auswahl.getKurslang()));
-        tfAnfangenAb.setText(String.valueOf(auswahl.getAnfangAb()));
-        tfEndeBis.setText(String.valueOf(auswahl.getEndeBis()));
+        tfAnfangenAb.setText(String.valueOf(auswahl.getAnfangab()));
+        tfEndeBis.setText(String.valueOf(auswahl.getEndebis()));
         tfKosten.setText(String.valueOf(auswahl.getKosten()));
     }
 
