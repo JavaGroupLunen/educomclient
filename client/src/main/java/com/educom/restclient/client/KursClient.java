@@ -71,15 +71,19 @@ public class KursClient implements HttpService<Kurs> {
     }
 
 
-
     @Override
     public String update(Long id, Kurs kurs) {
         final String uri = URL_UPDATE_Kurs;
-        Map<String, String> params = new HashMap<String, String>();
+        Map<String, String> params = new HashMap<>();
         params.put("id", String.valueOf(id));
         RestTemplate restTemplate = new RestTemplate();
-        restTemplate.put(uri, kurs, params);
-        return "updated";
+        HttpEntity<Kurs> entity = new HttpEntity<>(kurs, getHeader());
+        try {
+            restTemplate.exchange(uri, HttpMethod.PUT,entity, String.class,params);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return "success";
     }
 
 @Override
