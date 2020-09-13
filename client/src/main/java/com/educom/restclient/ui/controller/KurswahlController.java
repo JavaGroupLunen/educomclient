@@ -1,7 +1,7 @@
 package com.educom.restclient.ui.controller;
 
 import com.educom.restclient.client.KursClient;
-import com.educom.restclient.client.WebClientStockClient;
+import com.educom.restclient.client.WebClientLehreClientService;
 import com.educom.restclient.model.Kurs;
 import com.educom.restclient.util.ActionButtonTableCell;
 import javafx.beans.value.ChangeListener;
@@ -57,7 +57,7 @@ public class KurswahlController implements Initializable {
     private ApplicationContext applicationContext;
 
     private void getAllKurs() {
-        list = new WebClientStockClient(webClient).getKursList().collectList().block();
+        list = new WebClientLehreClientService(webClient).getKursList().collectList().block();
 
     }
 
@@ -79,7 +79,7 @@ public class KurswahlController implements Initializable {
     private void findBy(String param) {
         kursClient = new KursClient();
         if (rbtKursName1.isSelected()) {
-            list = kursClient.findByName(param);
+            list =kursClient.findByName(param).collectList().block();
 
         } else if (rbtRaum1.isSelected()) {
             list = kursClient.findByRaum(param);

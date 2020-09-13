@@ -20,8 +20,8 @@ public class ClientAutoConfiguration {
 
     @Bean
     @Profile(ClientProfiles.SSE)
-    StockClient webStockClient(WebClient webClient) {
-        return new WebClientStockClient(webClient);
+    LehreClientService webStockClient(WebClient webClient) {
+        return new WebClientLehreClientService(webClient);
     }
     @Bean
     RestTemplate restTemplate(){

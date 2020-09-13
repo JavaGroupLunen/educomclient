@@ -2,7 +2,7 @@ package com.educom.restclient.ui.controller;
 
 
 import com.educom.restclient.client.SchulerClient;
-import com.educom.restclient.client.WebClientStockClient;
+import com.educom.restclient.client.WebClientLehreClientService;
 import com.educom.restclient.model.Gender;
 import com.educom.restclient.model.Schuler;
 import com.educom.restclient.util.ActionButtonTableCell;
@@ -106,7 +106,7 @@ private UtilDate utildate=new UtilDate<Schuler>();
     }
 
     private void getAllSchuler() {
-        list = new WebClientStockClient(webClient).getSchulerList().collectList().block();
+        list = new WebClientLehreClientService(webClient).getSchulerList().collectList().block();
 
     }
 
@@ -128,7 +128,7 @@ private UtilDate utildate=new UtilDate<Schuler>();
     private void findBy(String param) {
         schulerClient = new SchulerClient();
         if (rbtVorname.isSelected()) {
-            list = schulerClient.findByName(param);
+            list =schulerClient.findByName(param).collectList().block();
 
         } else if (rbtNachname.isSelected()) {
             list = schulerClient.findByLastName(param);

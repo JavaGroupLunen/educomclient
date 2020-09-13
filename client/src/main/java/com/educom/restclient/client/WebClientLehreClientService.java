@@ -22,13 +22,12 @@ import java.util.Collections;
 
 
 @Log4j2
-public class WebClientStockClient implements StockClient {
+public class WebClientLehreClientService implements LehreClientService {
     private final WebClient webClient;
     static final String URL_ELTERNNAME = "http://localhost:8082/api/vertrag/findbyschuler/{name}";
-    public WebClientStockClient(WebClient webClient) {
+    public WebClientLehreClientService(WebClient webClient) {
         this.webClient = webClient;
     }
-
 
     @Override
     public Flux<Lehre> getLehreById(Long id) {
@@ -143,16 +142,14 @@ public class WebClientStockClient implements StockClient {
     @Override
     public String saveLehre(Lehre lehre)  {
         RestTemplate restTemplate = new RestTemplate();
-
         URI uri = null;
         try {
-            final String baseUrl = "http://localhost:8082/api/lehre/lehre";
+            final String baseUrl = "http://localhost:8082/api/lehre/add";
             uri = new URI(baseUrl);
         } catch (URISyntaxException e) {
             e.printStackTrace();        }
 
         HttpEntity<Lehre> entity = new HttpEntity<Lehre>(lehre, getHeader());
-        //String response = restTemplate.postForObject(uri, entity, String.class);
         String result = restTemplate.postForObject(uri, entity, String.class);
         return result;
     }

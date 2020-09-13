@@ -7,9 +7,13 @@ import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.*;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.reactive.function.client.WebClient;
+import reactor.core.publisher.Flux;
 
+import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.time.Duration;
 import java.util.*;
 
 @Log4j2
@@ -25,7 +29,7 @@ public class KursClient implements HttpService<Kurs> {
 
     @Autowired
     RestTemplate restTemplate;
-
+    private final WebClient webClient = WebClient.builder().build();
     @Override
     public String delete(Long id) {
         RestTemplate restTemplate=new RestTemplate();
@@ -41,21 +45,19 @@ public class KursClient implements HttpService<Kurs> {
 
 
     @Override
-    public List<Kurs> findByName(String firstname) {
-        final String uri = URL_FINDBYFIRSNAME;
-        Map<String, String> urlParameters = new HashMap<>();
-        urlParameters.put("firstname", firstname);
-        HttpEntity<Kurs> entity = new HttpEntity<Kurs>(getHeader());
-        ResponseEntity<Kurs[]> responseEntity = restTemplate.getForEntity(uri,
-                Kurs[].class,
-                urlParameters);
-
-        return responseEntity.getBody() != null ? Arrays.asList(entity.getBody()) : Collections.emptyList();
+    public Flux<Kurs> findByName(String name) {
+        return webClient.get().uri(URL_FINDBYLASTNAME,name )
+                .header("Authorization", "Bearer " + LoginController.authenticationText)
+                .retrieve()
+                .bodyToFlux(Kurs.class)
+                .retryBackoff(5, Duration.ofSeconds(1), Duration.ofSeconds(5))
+                .doOnError(IOException.class,
+                        e -> log.info(() -> "Closing stream for " + name + ". gefunden " + e.getMessage())).log();
 
     }
 
-    public List<Kurs> findByLastName(String lastname) {
 
+    public List<Kurs> findByLastName(String lastname) {
         final String uri = URL_FINDBYLASTNAME;
         Map<String, String> urlParameters = new HashMap<>();
         urlParameters.put("lastname", lastname);
@@ -131,13 +133,11 @@ public class KursClient implements HttpService<Kurs> {
         ResponseEntity<Kurs[]> response = restTemplate.getForEntity(uri,
                 Kurs[].class,
                 urlParameters);
-
         return response.getBody() != null ? Arrays.asList(entity.getBody()) : Collections.emptyList();
     }
 
     @Override
     public HttpHeaders getHeader() {
-
         HttpHeaders headers = new HttpHeaders();
         String authHeader = "Bearer " + LoginController.authenticationText;
         headers.set(HttpHeaders.AUTHORIZATION, authHeader);

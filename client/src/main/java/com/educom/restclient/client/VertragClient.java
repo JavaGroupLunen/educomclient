@@ -5,6 +5,7 @@ import com.educom.restclient.ui.controller.LoginController;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.*;
 import org.springframework.web.client.RestTemplate;
+import reactor.core.publisher.Flux;
 
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -40,7 +41,7 @@ public class VertragClient implements HttpService<Vertrag> {
     }
 
     @Override
-    public List<Vertrag> findByName(String name) {
+    public Flux<Vertrag> findByName(String name) {
         return null;
     }
 

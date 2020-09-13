@@ -7,9 +7,13 @@ import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.*;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.reactive.function.client.WebClient;
+import reactor.core.publisher.Flux;
 
+import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.time.Duration;
 import java.util.*;
 
 @Log4j2
@@ -25,7 +29,7 @@ public class SchulerClient implements HttpService<Schuler> {
 
     @Autowired
     RestTemplate restTemplate;
-
+    private final WebClient webClient = WebClient.builder().build();
 
     @Override
     public String delete(Long id) {
@@ -51,14 +55,14 @@ public class SchulerClient implements HttpService<Schuler> {
     }
 
     @Override
-    public List<Schuler> findByName(String firstname) {
-        final String uri = URL_FINDBYFIRSNAME;
-        Map<String, String> urlParameters = new HashMap<>();
-        urlParameters.put("firstname", firstname);
-        ResponseEntity<Schuler[]> entity = restTemplate.getForEntity(uri,
-                Schuler[].class,
-                urlParameters);
-        return entity.getBody() != null ? Arrays.asList(entity.getBody()) : Collections.emptyList();
+    public Flux<Schuler> findByName(String lastname) {
+        return webClient.get().uri(URL_FINDBYLASTNAME,lastname )
+                .header("Authorization", "Bearer " + LoginController.authenticationText)
+                .retrieve()
+                .bodyToFlux(Schuler.class)
+                .retryBackoff(5, Duration.ofSeconds(1), Duration.ofSeconds(5))
+                .doOnError(IOException.class,
+                        e -> log.info(() -> "Closing stream for " + lastname + ". gefunden " + e.getMessage())).log();
 
     }
 

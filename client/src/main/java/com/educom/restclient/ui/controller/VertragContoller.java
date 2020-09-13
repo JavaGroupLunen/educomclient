@@ -2,7 +2,7 @@ package com.educom.restclient.ui.controller;
 
 import com.educom.restclient.client.KursClient;
 import com.educom.restclient.client.VertragClient;
-import com.educom.restclient.client.WebClientStockClient;
+import com.educom.restclient.client.WebClientLehreClientService;
 import com.educom.restclient.model.*;
 import com.educom.restclient.util.ActionButtonTableCell;
 import javafx.beans.value.ChangeListener;
@@ -250,11 +250,11 @@ public class VertragContoller implements Initializable {
     private void findBy(String param) {
         vertragClient = new VertragClient(restTemplate);
         if (rbtVertragnum.isSelected()) {
-            list = new WebClientStockClient(webClient).getVertragById(Long.valueOf(param)).collectList().block();
+            list = new WebClientLehreClientService(webClient).getVertragById(Long.valueOf(param)).collectList().block();
         } else if (rbtSchuler.isSelected()) {
-            list = new WebClientStockClient(webClient).getSchulerByName(param).collectList().block();
+            list = new WebClientLehreClientService(webClient).getSchulerByName(param).collectList().block();
         } else if (rbtEltern.isSelected()) {
-            list = new WebClientStockClient(webClient).getVertragByEltern(param).collectList().block();
+            list = new WebClientLehreClientService(webClient).getVertragByEltern(param).collectList().block();
         }else if (rbtStatus.isSelected()) {
            // list = vertragClient.findByStatus(param);
     }
@@ -356,7 +356,7 @@ public class VertragContoller implements Initializable {
 
 
     private void getAllVertrage() {
-        list = new WebClientStockClient(webClient).getVertragList().collectList().block();
+        list = new WebClientLehreClientService(webClient).getVertragList().collectList().block();
     }
 
     @Override

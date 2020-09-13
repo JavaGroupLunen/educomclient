@@ -2,7 +2,7 @@ package com.educom.restclient.ui.controller;
 
 
 import com.educom.restclient.client.LehreClient;
-import com.educom.restclient.client.WebClientStockClient;
+import com.educom.restclient.client.WebClientLehreClientService;
 import com.educom.restclient.model.Gender;
 import com.educom.restclient.model.Lehre;
 import com.educom.restclient.util.ActionButtonTableCell;
@@ -58,7 +58,7 @@ public class LehreController implements Initializable {
     private Button btnAdd, btnUpdate, btnDelete, btnSave, btnLehrer, btnSchuler, btnVertrag, btnKurs, btnSignOut;
 
 private UtilDate utildate=new UtilDate<Lehre>();
-
+private  LehreClient restClientTemplate = new LehreClient(restTemplate);
     @FXML
     private void addAction() throws IOException, URISyntaxException {
         Lehre lehre = new Lehre();
@@ -70,9 +70,8 @@ private UtilDate utildate=new UtilDate<Lehre>();
         lehre.setGender(cmbGender.getValue());
         lehre.setStadt(tfStadt.getText());
         lehre.setPlz(tfPlz.getText());
-        lehre.setPhoneNumber(tfPhoneNumber.getText());
-        String codeValue = new WebClientStockClient(webClient).saveLehre(lehre);
-        System.out.println(codeValue);
+        lehre.setPhoneNumber(tfPhoneNumber.getText());   //   String codeValue = new WebClientStockClient(webClient).saveLehre(lehre);
+        restClientTemplate.add(lehre);
         getAllLehre();
         fillTableview();
         clearField();
@@ -85,8 +84,7 @@ private UtilDate utildate=new UtilDate<Lehre>();
         updatedLehre.setLastName(tfLastName.getText());
         updatedLehre.setFirstName(tfFirstName.getText());
         updatedLehre.setEmail(tfEmail.getText());
-        LehreClient restClientTemplate = new LehreClient(restTemplate);
-        restClientTemplate.updateLehre(getUpdatedLehreId(),updatedLehre);
+        restClientTemplate.update(getUpdatedLehreId(),updatedLehre);
         getAllLehre();
         fillTableview();
         clearField();
@@ -94,7 +92,7 @@ private UtilDate utildate=new UtilDate<Lehre>();
 
 
     private void getAllLehre() {
-        list = new WebClientStockClient(webClient).getLehreList().collectList().block();
+        list = new WebClientLehreClientService(webClient).getLehreList().collectList().block();
 
     }
 
@@ -102,35 +100,33 @@ private UtilDate utildate=new UtilDate<Lehre>();
         if (tfSearch.getText().trim().isEmpty()) {
             getAllLehre();
         }
-
         lehresData = FXCollections.observableList(list).sorted();
         tableView.setItems(lehresData);
     }
 
     private void deleteClient(Lehre lehre) {
-        LehreClient restClientTemplate = new LehreClient(restTemplate);
-        restClientTemplate.deleteLehre(lehre);
+         restClientTemplate = new LehreClient(restTemplate);
+        restClientTemplate.delete(lehre.getId());
         getAllLehre();
         fillTableview();
     }
 
     private void findBy(String param) {
-        LehreClient restClientTemplate = new LehreClient(restTemplate);
+         restClientTemplate = new LehreClient(restTemplate);
         if (rbtVorname.isSelected()) {
-            list = restClientTemplate.findByName(param);
+            list =restClientTemplate.findByFirstName(param).collectList().block();
 
         } else if (rbtNachname.isSelected()) {
-            list = restClientTemplate.findByLastName(param);
+            list =restClientTemplate.findByName(param).collectList().block();
 
         } else if (rbtEmail.isSelected()) {
-            list = restClientTemplate.findByEmailId(param);
+            list =restClientTemplate.findByEmail(param).collectList().block();
         }
     }
 
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-       // cmbGdatum.setConverter(converter);
         fillcomboBox();
         btnAdd.getStyleClass().add("button-raised");
         btnSave.getStyleClass().add("button-raised");
@@ -162,14 +158,11 @@ private UtilDate utildate=new UtilDate<Lehre>();
             @Override
             public void changed(ObservableValue<? extends String> observable,
                                 String oldValue, String newValue) {
-
                 System.out.println(" Text Changed to  " + newValue + "\n");
                 if (!newValue.trim().isEmpty()) {
                     findBy(newValue);
-
                 }
                 fillTableview();
-
             }
         });
 

@@ -2,61 +2,71 @@ package com.educom.restclient.client;
 
 import com.educom.restclient.model.Lehre;
 import com.educom.restclient.ui.controller.LoginController;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.reactive.function.client.WebClient;
+import reactor.core.publisher.Flux;
 
+import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.*;
-
-public class LehreClient implements HttpService<Lehre> {
+import java.time.Duration;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
+@Log4j2
+public class LehreClient implements HttpService<Lehre>  {
     static final String URL_UPDATE_LEHRE = "http://localhost:8082/api/lehre/updatelehre/{id}";
     static final String URL_FINDBYLASTNAME="http://localhost:8082/api/lehre/findByLastName/{lastname}";
     static final String URL_FINDBYFIRSNAME="http://localhost:8082/api/lehre/findByName/{firstname}";
-    static final String URL_FINDBYEMAIL= "http://localhost:8082/api/lehre/findByEmailId/{emailId}";
+    static final String URL_FINDBYEMAIL= "http://localhost:8082/api/lehre//findByEmail/{email}";
     static final String URL_DELETEBYID="http://localhost:8082/api/lehre/deletebyId/{id}";
-    static final String URL_ADD_LEHRE = "http://localhost:8082/api/lehre/updatelehre/{id}";
+    static final String URL_ADD_LEHRE = "http://localhost:8082/api/lehre/add";
 
     @Autowired
     RestTemplate restTemplate;
+    private final WebClient webClient = WebClient.builder().build();
 
     public LehreClient(RestTemplate restTemplate) {
         this.restTemplate = restTemplate;
     }
 
-    public void deleteLehre(Lehre lehre) {
-        final String uri =URL_DELETEBYID;
-        Map<String, String> params = new HashMap<>();
-        params.put("id", String.valueOf(lehre.getId()));
-        restTemplate.delete(uri, params);
-        System.out.println("removed");
 
-    }
-
-   public List<Lehre> findByEmailId(String emailId){
-       final String uri = URL_FINDBYEMAIL;
-       Map<String, String> urlParameters = new HashMap<>();
-       urlParameters.put("emailId", emailId);
-       ResponseEntity<Lehre[]> entity = restTemplate.getForEntity(uri,
-               Lehre[].class,
-               urlParameters);
-       return entity.getBody() != null? Arrays.asList(entity.getBody()) :Collections.emptyList();
+   public Flux<Lehre> findByEmail(String email){
+       return webClient.get().uri(URL_FINDBYEMAIL,email )
+               .header("Authorization", "Bearer " + LoginController.authenticationText)
+               .retrieve()
+               .bodyToFlux(Lehre.class)
+               .retryBackoff(5, Duration.ofSeconds(1), Duration.ofSeconds(5))
+               .doOnError(IOException.class,
+                       e -> log.info(() -> "Closing stream for " + email + ". gefunden " + e.getMessage())).log();
 
    }
 
     @Override
     public String update(Long id, Lehre lehre) {
-        return null;
+        Map<String, String> params = new HashMap<>();
+        params.put("id", String.valueOf(id));
+        RestTemplate restTemplate = new RestTemplate();
+        final String baseUrl = URL_UPDATE_LEHRE;
+        HttpEntity<Lehre> entity = new HttpEntity<>(lehre, getHeader());
+        try {
+        restTemplate.exchange(baseUrl, HttpMethod.PUT,entity, String.class,params);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return "success";
     }
 
     @Override
     public String add(Lehre lehre) {
         RestTemplate restTemplate = new RestTemplate();
-
         URI uri = null;
         try {
             final String baseUrl = URL_ADD_LEHRE;
@@ -64,50 +74,47 @@ public class LehreClient implements HttpService<Lehre> {
         } catch (URISyntaxException e) {
             e.printStackTrace();
         }
-
         HttpEntity<Lehre> entity = new HttpEntity<Lehre>(lehre, getHeader());
         String response = restTemplate.postForObject(uri, entity, String.class);
-
         return response;
     }
 
+
+
     @Override
     public String delete(Long id) {
-        return null;
-    }
-
-    public List<Lehre> findByName(String firstname){
-        final String uri =URL_FINDBYFIRSNAME;
-        Map<String, String> urlParameters = new HashMap<>();
-        urlParameters.put("firstname", firstname);
-        ResponseEntity<Lehre[]> entity = restTemplate.getForEntity(uri,
-                Lehre[].class,
-                urlParameters);
-        return entity.getBody() != null? Arrays.asList(entity.getBody()) :Collections.emptyList();
-
-    }
-    public List<Lehre> findByLastName(String lastname){
-
-        final String uri = URL_FINDBYLASTNAME;
-        Map<String, String> urlParameters = new HashMap<>();
-        urlParameters.put("lastname", lastname);
-        ResponseEntity<Lehre[]> entity = restTemplate.getForEntity(uri,
-                Lehre[].class,
-                urlParameters);
-        return entity.getBody() != null? Arrays.asList(entity.getBody()) :Collections.emptyList();
-
-    }
-
-
-    public String updateLehre(Long id,Lehre lehre) {
-        final String uri =URL_UPDATE_LEHRE;
-        Map<String, String> params = new HashMap<String, String>();
+        RestTemplate restTemplate=new RestTemplate();
+        final String uri = URL_DELETEBYID;
+        Map<String, String> params = new HashMap<>();
         params.put("id", String.valueOf(id));
-
-        RestTemplate restTemplate = new RestTemplate();
-        restTemplate.put ( uri, lehre, params);
-        return "success";
+        HttpEntity<Lehre> entity = new HttpEntity<>(getHeader());
+        restTemplate.exchange(uri, HttpMethod.DELETE,entity,String.class, params);
+        return "removed";
     }
+
+    public Flux<Lehre> findByFirstName(String firstname){
+        return webClient.get().uri(URL_FINDBYFIRSNAME,firstname )
+                .header("Authorization", "Bearer " + LoginController.authenticationText)
+                .retrieve()
+                .bodyToFlux(Lehre.class)
+                .retryBackoff(5, Duration.ofSeconds(1), Duration.ofSeconds(5))
+                .doOnError(IOException.class,
+                        e -> log.info(() -> "Closing stream for " + firstname + ". gefunden " + e.getMessage())).log();
+
+    }
+    public Flux<Lehre> findByName(String name){
+    return webClient.get().uri(URL_FINDBYLASTNAME,name )
+                .header("Authorization", "Bearer " + LoginController.authenticationText)
+                .retrieve()
+                .bodyToFlux(Lehre.class)
+                .retryBackoff(5, Duration.ofSeconds(1), Duration.ofSeconds(5))
+                .doOnError(IOException.class,
+                        e -> log.info(() -> "Closing stream for " + name + ". gefunden " + e.getMessage())).log();
+
+         }
+
+
+
 
     public HttpHeaders getHeader() {
         HttpHeaders headers = new HttpHeaders();

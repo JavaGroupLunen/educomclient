@@ -1,7 +1,7 @@
 package com.educom.restclient.ui.controller;
 
 import com.educom.restclient.client.KursClient;
-import com.educom.restclient.client.WebClientStockClient;
+import com.educom.restclient.client.WebClientLehreClientService;
 import com.educom.restclient.model.Kurs;
 import com.educom.restclient.model.KursType;
 import com.educom.restclient.model.Lehre;
@@ -112,7 +112,7 @@ public class KursController implements Initializable {
     }
 
     private List<Lehre> getAllLehre() {
-        return new WebClientStockClient(webClient).getLehreList().collectList().block();
+        return new WebClientLehreClientService(webClient).getLehreList().collectList().block();
 
     }
 
@@ -133,7 +133,7 @@ public class KursController implements Initializable {
     }
 
     private void getAllKurs() {
-        list = new WebClientStockClient(webClient).getKursList().collectList().block();
+        list = new WebClientLehreClientService(webClient).getKursList().collectList().block();
     }
 
     private void fillTableview() {
@@ -152,9 +152,9 @@ public class KursController implements Initializable {
     }
 
     private void findBy(String param) {
-        kursClient = new KursClient();
+           kursClient = new KursClient();
         if (rbtKursName.isSelected()) {
-            list = kursClient.findByName(param);
+            list =kursClient.findByName(param).collectList().block();
 
         } else if (rbtRaum.isSelected()) {
             list = kursClient.findByRaum(param);
