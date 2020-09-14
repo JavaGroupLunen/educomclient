@@ -2,7 +2,6 @@ package com.educom.restclient.ui.controller;
 
 
 import com.educom.restclient.client.SchulerClient;
-import com.educom.restclient.client.WebClientLehreClientService;
 import com.educom.restclient.model.Gender;
 import com.educom.restclient.model.Schuler;
 import com.educom.restclient.util.ActionButtonTableCell;
@@ -59,7 +58,7 @@ public class SchulerController implements Initializable {
     private Long updatedSchulerId;
     private final WebClient webClient = WebClient.builder().build();
     private final RestTemplate restTemplate = new RestTemplate();
-    private SchulerClient schulerClient;
+    private SchulerClient schulerClient=new SchulerClient();;
     private ApplicationContext applicationContext;
     @Value("classpath:/lehre.fxml")
     Resource  resource;
@@ -99,14 +98,14 @@ private UtilDate utildate=new UtilDate<Schuler>();
         updatedSchuler.setGeburstDatum(cmbGdatum.getValue());
         updatedSchuler.setPlz(tfPlz.getText());
         schulerClient = new SchulerClient();
-        schulerClient.updateschuler(getUpdatedSchulerId(), updatedSchuler);
+        schulerClient.update(getUpdatedSchulerId(), updatedSchuler);
         getAllSchuler();
         fillTableview();
         clearField();
     }
 
     private void getAllSchuler() {
-        list = new WebClientLehreClientService(webClient).getSchulerList().collectList().block();
+        list = schulerClient.getSchulerList().collectList().block();
 
     }
 

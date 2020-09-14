@@ -1,6 +1,7 @@
 package com.educom.restclient.client;
 
 
+import com.educom.restclient.client.service.HttpService;
 import com.educom.restclient.model.Kurs;
 import com.educom.restclient.ui.controller.LoginController;
 import lombok.extern.log4j.Log4j2;
@@ -124,9 +125,20 @@ public class KursClient implements HttpService<Kurs> {
         HttpEntity<Kurs> entity = new HttpEntity<Kurs>(getHeader());
         ResponseEntity<Kurs[]> response = restTemplate.exchange(URL_KursLIST,
                 HttpMethod.GET, entity, Kurs[].class);
-      //  ResponseEntity<List<Kurs>> kurslist = restTemplate.getForObject(uri, ResponseEntity.class);
 
         return  response.getBody() != null ? Arrays.asList(entity.getBody()) : Collections.emptyList();
+    }
+
+    public Flux<Kurs> getKursList() {
+        log.info("WebClientStockClient");
+        return webClient.get()
+                .uri("localhost:8082/api/kurs/kurslist")
+                .header("Authorization", "Bearer " + LoginController.authenticationText)
+                .retrieve()
+                .bodyToFlux(Kurs.class)
+                .retryBackoff(5, Duration.ofSeconds(1), Duration.ofSeconds(5))
+                .doOnError(IOException.class,
+                        e -> log.info(() -> "Closing stream for " + ". Received " + e.getMessage()));
     }
 
     public List<Kurs> findByRaum(String raum) {

@@ -1,5 +1,6 @@
 package com.educom.restclient.client;
 
+import com.educom.restclient.client.service.HttpService;
 import com.educom.restclient.model.Lehre;
 import com.educom.restclient.ui.controller.LoginController;
 import lombok.extern.log4j.Log4j2;
@@ -21,7 +22,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 @Log4j2
-public class LehreClient implements HttpService<Lehre>  {
+public class LehreClient implements HttpService<Lehre> {
     static final String URL_UPDATE_LEHRE = "http://localhost:8082/api/lehre/updatelehre/{id}";
     static final String URL_FINDBYLASTNAME="http://localhost:8082/api/lehre/findByLastName/{lastname}";
     static final String URL_FINDBYFIRSNAME="http://localhost:8082/api/lehre/findByName/{firstname}";
@@ -48,7 +49,30 @@ public class LehreClient implements HttpService<Lehre>  {
                        e -> log.info(() -> "Closing stream for " + email + ". gefunden " + e.getMessage())).log();
 
    }
+    public Flux<Lehre> getLehreList() {
+        System.out.println(LoginController.authenticationText);
+        log.info("WebClientStockClient");
+        return webClient.get()
+                .uri("localhost:8082/api/lehre/lehrelist")
+                .header("Authorization", "Bearer " + LoginController.authenticationText)
+                .retrieve()
+                .bodyToFlux(Lehre.class)
+                .retryBackoff(5, Duration.ofSeconds(1), Duration.ofSeconds(5))
+                .doOnError(IOException.class,
+                        e -> log.info(() -> "Closing stream for " + ". Received " + e.getMessage()));
+    }
 
+    public Flux<Lehre> getLehreById(Long id) {
+        log.info("WebClientStockClient");
+        return webClient.get()
+                .uri("localhost:8082/api/lehre/getbyId/{id}", id)
+                .header("Authorization", "Bearer " + LoginController.authenticationText)
+                .retrieve()
+                .bodyToFlux(Lehre.class)
+                .retryBackoff(5, Duration.ofSeconds(1), Duration.ofSeconds(5))
+                .doOnError(IOException.class,
+                        e -> log.info(() -> "Closing stream for " + id + ". Received " + e.getMessage()));
+    }
     @Override
     public String update(Long id, Lehre lehre) {
         Map<String, String> params = new HashMap<>();

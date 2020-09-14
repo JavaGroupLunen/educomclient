@@ -1,7 +1,7 @@
 package com.educom.restclient.ui.controller;
 
 import com.educom.restclient.client.KursClient;
-import com.educom.restclient.client.WebClientLehreClientService;
+import com.educom.restclient.client.LehreClient;
 import com.educom.restclient.model.Kurs;
 import com.educom.restclient.model.KursType;
 import com.educom.restclient.model.Lehre;
@@ -20,7 +20,6 @@ import javafx.scene.layout.AnchorPane;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
-import org.springframework.web.reactive.function.client.WebClient;
 
 import java.net.URL;
 import java.time.LocalDate;
@@ -31,7 +30,7 @@ import static javafx.collections.FXCollections.observableArrayList;
 
 @Component
 public class KursController implements Initializable {
-    private final WebClient webClient = WebClient.builder().build();
+   //private final WebClient webClient = WebClient.builder().build();
     private final RestTemplate restTemplate = new RestTemplate();
     @FXML
     private AnchorPane rootPane;
@@ -66,22 +65,21 @@ public class KursController implements Initializable {
     private TableColumn<Kurs, ?> clmLange;
     @FXML
     private TableColumn<Kurs, ?> clmDauern;
-
     @FXML
     private Button btnAdd;
     @FXML
     private Button btnSave;
-
     @FXML
     private DatePicker dtpAnfangAb, dtpEndeBis;
 
     private ObservableList<Kurs> kurssData = observableArrayList();
     private List<Kurs> list = null;
     private Long updatedKursId;
-    private KursClient kursClient;
+    private KursClient kursClient= new KursClient();
+    private LehreClient lehreClient=new LehreClient(restTemplate);
     private ApplicationContext applicationContext;
     private  UtilDate utildate=new UtilDate<Kurs>();
-    private
+
 
     @FXML
     void addAction(ActionEvent event) {
@@ -112,7 +110,7 @@ public class KursController implements Initializable {
     }
 
     private List<Lehre> getAllLehre() {
-        return new WebClientLehreClientService(webClient).getLehreList().collectList().block();
+        return lehreClient.getLehreList().collectList().block();
 
     }
 
@@ -133,7 +131,7 @@ public class KursController implements Initializable {
     }
 
     private void getAllKurs() {
-        list = new WebClientLehreClientService(webClient).getKursList().collectList().block();
+        list = kursClient.getKursList().collectList().block();
     }
 
     private void fillTableview() {

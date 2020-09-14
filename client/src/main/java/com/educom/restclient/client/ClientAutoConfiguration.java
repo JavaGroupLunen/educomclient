@@ -18,12 +18,13 @@ public class ClientAutoConfiguration {
         return WebClient.builder().build();
     }
 
+//    @Bean
+//    @Profile(ClientProfiles.SSE)
+//    LehreClientService webStockClient(WebClient webClient) {
+//        return new WebClientLehreClientService(webClient);
+//    }
     @Bean
     @Profile(ClientProfiles.SSE)
-    LehreClientService webStockClient(WebClient webClient) {
-        return new WebClientLehreClientService(webClient);
-    }
-    @Bean
     RestTemplate restTemplate(){
         return new RestTemplate();
 }

@@ -1,7 +1,9 @@
 package com.educom.restclient.client;
 
 
+import com.educom.restclient.client.service.HttpService;
 import com.educom.restclient.model.Schuler;
+import com.educom.restclient.model.Vertrag;
 import com.educom.restclient.ui.controller.LoginController;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,7 +28,7 @@ public class SchulerClient implements HttpService<Schuler> {
     static final String URL_ADDSCHULER = "http://localhost:8082/api/schuler/add";
     static final String URL_SCHULERLIST = "http://localhost:8082/api/schuler/schulerlist";
     static final String URL_GETBYID = "http://localhost:8082/api/schuler/{id}";
-
+    static final String URL_ELTERNNAME = "http://localhost:8082/api/vertrag/findbyschuler/{name}";
     @Autowired
     RestTemplate restTemplate;
     private final WebClient webClient = WebClient.builder().build();
@@ -42,6 +44,7 @@ public class SchulerClient implements HttpService<Schuler> {
         restTemplate.exchange(uri, HttpMethod.DELETE,entity,String.class, params);
         return "removed";
     }
+
 
     public List<Schuler> findByEmail(String email) {
         final String uri = URL_FINDBYEMAIL;
@@ -67,7 +70,6 @@ public class SchulerClient implements HttpService<Schuler> {
     }
 
     public List<Schuler> findByLastName(String lastname) {
-
         final String uri = URL_FINDBYLASTNAME;
         Map<String, String> urlParameters = new HashMap<>();
         urlParameters.put("lastname", lastname);
@@ -79,26 +81,37 @@ public class SchulerClient implements HttpService<Schuler> {
     }
 
 
-    public String updateschuler(Long id, Schuler schuler) {
-        final String uri = URL_UPDATE_schuler;
-        Map<String, String> params = new HashMap<String, String>();
-        params.put("id", String.valueOf(id));
-        HttpEntity<Schuler> entity = new HttpEntity<Schuler>(schuler, getHeader());
-        restTemplate.exchange(uri, HttpMethod.PUT,entity,String.class, params);
-        return "updated";
-
-    }
+//    public String updateschuler(Long id, Schuler schuler) {
+//        final String uri = URL_UPDATE_schuler;
+//        RestTemplate restTemplate = new RestTemplate();
+//        Map<String, String> params = new HashMap<String, String>();
+//        params.put("id", String.valueOf(id));
+//        HttpEntity<Schuler> entity = new HttpEntity<Schuler>(schuler, getHeader());
+//        restTemplate.exchange(uri, HttpMethod.PUT,entity,String.class, params);
+//        return "updated";
+//
+//    }
 
     @Override
     public String update(Long id, Schuler schuler) {
         final String uri = URL_UPDATE_schuler;
+        RestTemplate restTemplate = new RestTemplate();
         Map<String, String> params = new HashMap<String, String>();
         params.put("id", String.valueOf(id));
         HttpEntity<Schuler> entity = new HttpEntity<Schuler>(schuler, getHeader());
         restTemplate.exchange(uri, HttpMethod.PUT,entity,String.class, params);
         return "updated";
-
     }
+//    @Override
+//    public String update(Long id, Schuler schuler) {
+//        final String uri = URL_UPDATE_schuler;
+//        Map<String, String> params = new HashMap<String, String>();
+//        params.put("id", String.valueOf(id));
+//        HttpEntity<Schuler> entity = new HttpEntity<Schuler>(schuler, getHeader());
+//        restTemplate.exchange(uri, HttpMethod.PUT,entity,String.class, params);
+//        return "updated";
+//
+//    }
 
     @Override
     public String add(Schuler schuler) {
@@ -115,7 +128,17 @@ public class SchulerClient implements HttpService<Schuler> {
         return response;
 
     }
-
+    public Flux<Schuler> getSchulerList() {
+        log.info("WebClientStockClient");
+        return webClient.get()
+                .uri("localhost:8082/api/schuler/schulerlist")
+                .header("Authorization", "Bearer " + LoginController.authenticationText)
+                .retrieve()
+                .bodyToFlux(Schuler.class)
+                .retryBackoff(5, Duration.ofSeconds(1), Duration.ofSeconds(5))
+                .doOnError(IOException.class,
+                        e -> log.info(() -> "Closing stream for " + ". Received " + e.getMessage()));
+    }
 @Override
     public HttpHeaders getHeader() {
         HttpHeaders headers = new HttpHeaders();

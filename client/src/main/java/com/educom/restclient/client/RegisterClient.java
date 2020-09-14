@@ -1,6 +1,7 @@
 package com.educom.restclient.client;
 
 
+import com.educom.restclient.client.service.HttpService;
 import com.educom.restclient.model.Kurs;
 import com.educom.restclient.ui.controller.LoginController;
 import lombok.extern.log4j.Log4j2;

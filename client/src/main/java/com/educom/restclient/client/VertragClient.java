@@ -1,16 +1,21 @@
 package com.educom.restclient.client;
 
+import com.educom.restclient.client.service.HttpService;
 import com.educom.restclient.model.Vertrag;
 import com.educom.restclient.ui.controller.LoginController;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.*;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Flux;
 
+import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.time.Duration;
 import java.util.*;
-
+@Log4j2
 public class VertragClient implements HttpService<Vertrag> {
     static final String URL_UPDATE_Vertrag = "http://localhost:8082/api/vertrag/updatevertrag/{id}";
     static final String URL_ELTERNNAME = "http://localhost:8082/api/vertrag/findbyschuler/{name}";
@@ -23,7 +28,7 @@ public class VertragClient implements HttpService<Vertrag> {
 
     @Autowired
     RestTemplate restTemplate;
-
+    private WebClient webClient=WebClient.builder().build();
 
     public VertragClient(RestTemplate restTemplate) {
         this.restTemplate = restTemplate;
@@ -104,8 +109,50 @@ public class VertragClient implements HttpService<Vertrag> {
                 HttpMethod.GET, entity, Vertrag[].class);
         return response.getBody() != null ? Arrays.asList(entity.getBody()) : Collections.emptyList();
     }
-
-
+    public Flux<Vertrag> getVertragById(Long id) {
+        log.info("WebClientStockClient");
+        return webClient.get()
+                .uri("localhost:8082/api/vertrag/getbyId/{id}",id)
+                .header("Authorization", "Bearer " + LoginController.authenticationText)
+                .retrieve()
+                .bodyToFlux(Vertrag.class)
+                .retryBackoff(5, Duration.ofSeconds(1), Duration.ofSeconds(5))
+                .doOnError(IOException.class,
+                        e -> log.info(() -> "Closing stream for " + ". Received " + e.getMessage()));
+    }
+    public Flux<Vertrag> getVertragList() {
+        log.info("WebClientStockClient");
+        return webClient.get()
+                .uri("localhost:8082/api/vertrag/vertraglist")
+                .header("Authorization", "Bearer " + LoginController.authenticationText)
+                .retrieve()
+                .bodyToFlux(Vertrag.class)
+                .retryBackoff(5, Duration.ofSeconds(1), Duration.ofSeconds(5))
+                .doOnError(IOException.class,
+                        e -> log.info(() -> "Closing stream for " + ". Received " + e.getMessage()));
+    }
+    public Flux<Vertrag> getVertragByEltern(String name) {
+        log.info("WebClientStockClient");
+        return webClient.get()
+                .uri("localhost:8082/api/vertrag/findbyelternname/{elternname}", name)
+                .header("Authorization", "Bearer " + LoginController.authenticationText)
+                .retrieve()
+                .bodyToFlux(Vertrag.class)
+                .retryBackoff(5, Duration.ofSeconds(1), Duration.ofSeconds(5))
+                .doOnError(IOException.class,
+                        e -> log.info(() -> "Closing stream for " + name + ". Received " + e.getMessage()));
+    }
+    public Flux<Vertrag> getSchulerByName(String name) {
+        log.info("WebClientStockClient");
+        return webClient.get()
+                .uri(URL_ELTERNNAME, name)
+                .header("Authorization", "Bearer " + LoginController.authenticationText)
+                .retrieve()
+                .bodyToFlux(Vertrag.class)
+                .retryBackoff(5, Duration.ofSeconds(1), Duration.ofSeconds(5))
+                .doOnError(IOException.class,
+                        e -> log.info(() -> "Closing stream for " + name + ". Received " + e.getMessage()));
+    }
     @Override
     public HttpHeaders getHeader() {
         HttpHeaders headers = new HttpHeaders();

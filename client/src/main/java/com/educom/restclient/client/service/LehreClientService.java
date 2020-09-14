@@ -1,4 +1,4 @@
-package com.educom.restclient.client;
+package com.educom.restclient.client.service;
 
 import com.educom.restclient.model.Lehre;
 import reactor.core.publisher.Flux;

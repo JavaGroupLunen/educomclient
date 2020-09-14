@@ -2,9 +2,9 @@ package com.educom.restclient.ui.controller;
 
 import com.educom.restclient.client.KursClient;
 import com.educom.restclient.client.VertragClient;
-import com.educom.restclient.client.WebClientLehreClientService;
 import com.educom.restclient.model.*;
 import com.educom.restclient.util.ActionButtonTableCell;
+import com.educom.restclient.util.UtilDate;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
@@ -136,14 +136,14 @@ public class VertragContoller implements Initializable {
     private ObservableList<Vertrag> vertragsDatei = observableArrayList();
     private  List<Kurs> selectedKursList=new ArrayList<>();
     private ObservableList<Kurs> kurssAuswahlData =  observableArrayList();
-    private VertragClient vertragClient;
+    private VertragClient vertragClient=new VertragClient(restTemplate);
     private ApplicationContext applicationContext;
     private Kurs selectedKurse;
     private KursClient kursClient;
     private List<Vertrag> list = null;
     String pattern = "dd-MM-yyyy";
     DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern(pattern);
-
+    private UtilDate utildate=new UtilDate<Kurs>();
     @FXML
     void addVertragAction(ActionEvent event) {
         Schuler schuler = new Schuler();
@@ -161,9 +161,6 @@ public class VertragContoller implements Initializable {
         schuler.setKlasse(tfKlasse.getText());
         Set<Kurs> list = new ArrayList<Kurs>().stream().collect(Collectors.toSet());
         schuler.setKurses(list);
-        // schulerClient = new SchulerClient(restTemplate);
-        System.out.println(schuler);
-        // schulerClient.add(schuler);
         vertragClient=new VertragClient(restTemplate);
         Vertrag neuvertrag=new Vertrag();
         neuvertrag.setSchuler(schuler);
@@ -250,11 +247,11 @@ public class VertragContoller implements Initializable {
     private void findBy(String param) {
         vertragClient = new VertragClient(restTemplate);
         if (rbtVertragnum.isSelected()) {
-            list = new WebClientLehreClientService(webClient).getVertragById(Long.valueOf(param)).collectList().block();
+            list =vertragClient.getVertragById(Long.valueOf(param)).collectList().block();
         } else if (rbtSchuler.isSelected()) {
-            list = new WebClientLehreClientService(webClient).getSchulerByName(param).collectList().block();
+            list = vertragClient.getSchulerByName(param).collectList().block();
         } else if (rbtEltern.isSelected()) {
-            list = new WebClientLehreClientService(webClient).getVertragByEltern(param).collectList().block();
+            list = vertragClient.getVertragByEltern(param).collectList().block();
         }else if (rbtStatus.isSelected()) {
            // list = vertragClient.findByStatus(param);
     }
@@ -296,13 +293,16 @@ public class VertragContoller implements Initializable {
         clmLehre.setCellValueFactory(new PropertyValueFactory("lehre"));
         clmLange.setCellValueFactory(new PropertyValueFactory("kurslang"));
         clmDauern.setCellValueFactory(new PropertyValueFactory("dauer"));
-        clmBeginAb.setCellValueFactory(new PropertyValueFactory("anfangAb)"));
-        clmEndeBis.setCellValueFactory(new PropertyValueFactory("endeBis)"));
+        clmBeginAb.setCellValueFactory(new PropertyValueFactory("anfangab"));
+        clmEndeBis.setCellValueFactory(new PropertyValueFactory("endebis"));
         clmKursKosten.setCellValueFactory(new PropertyValueFactory<>("kosten"));
         clmKursDelete.setCellFactory(ActionButtonTableCell.forTableColumn("Delete", (Kurs p) -> {
             kursdeleteFromAuswahlTable(p);
             return p;
         }));
+        clmBeginAb.setCellFactory((column) ->  utildate.convertColumn(column));
+        clmEndeBis.setCellFactory((column) -> utildate.convertColumn(column));
+
         tbwAngemeldeteKurse.getItems().setAll(kurssAuswahlData);
         tbwAngemeldeteKurse.getColumns().setAll(clmKursName, clmRaum, clmLehre, clmLange,clmDauern,clmBeginAb,clmEndeBis,clmKursDelete);
     }
@@ -356,7 +356,7 @@ public class VertragContoller implements Initializable {
 
 
     private void getAllVertrage() {
-        list = new WebClientLehreClientService(webClient).getVertragList().collectList().block();
+        list = vertragClient.getVertragList().collectList().block();
     }
 
     @Override

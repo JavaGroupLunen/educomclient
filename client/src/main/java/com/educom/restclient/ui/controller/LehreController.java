@@ -2,7 +2,6 @@ package com.educom.restclient.ui.controller;
 
 
 import com.educom.restclient.client.LehreClient;
-import com.educom.restclient.client.WebClientLehreClientService;
 import com.educom.restclient.model.Gender;
 import com.educom.restclient.model.Lehre;
 import com.educom.restclient.util.ActionButtonTableCell;
@@ -92,7 +91,7 @@ private  LehreClient restClientTemplate = new LehreClient(restTemplate);
 
 
     private void getAllLehre() {
-        list = new WebClientLehreClientService(webClient).getLehreList().collectList().block();
+        list = restClientTemplate.getLehreList().collectList().block();
 
     }
 
@@ -105,7 +104,7 @@ private  LehreClient restClientTemplate = new LehreClient(restTemplate);
     }
 
     private void deleteClient(Lehre lehre) {
-         restClientTemplate = new LehreClient(restTemplate);
+        restClientTemplate = new LehreClient(restTemplate);
         restClientTemplate.delete(lehre.getId());
         getAllLehre();
         fillTableview();

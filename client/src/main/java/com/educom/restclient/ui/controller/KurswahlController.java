@@ -1,9 +1,9 @@
 package com.educom.restclient.ui.controller;
 
 import com.educom.restclient.client.KursClient;
-import com.educom.restclient.client.WebClientLehreClientService;
 import com.educom.restclient.model.Kurs;
 import com.educom.restclient.util.ActionButtonTableCell;
+import com.educom.restclient.util.UtilDate;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
@@ -20,7 +20,6 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
 import org.springframework.context.ApplicationContext;
 import org.springframework.web.client.RestTemplate;
-import org.springframework.web.reactive.function.client.WebClient;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -33,7 +32,7 @@ import static javafx.collections.FXCollections.observableArrayList;
 
 public class KurswahlController implements Initializable {
     private static Kurs auswahl;
-    private final WebClient webClient = WebClient.builder().build();
+   // private final WebClient webClient = WebClient.builder().build();
     private final RestTemplate restTemplate = new RestTemplate();
     @FXML
     private RadioButton rbtKursName1, rbtRaum1, rbtLehre1;
@@ -53,11 +52,12 @@ public class KurswahlController implements Initializable {
     private ObservableList<Kurs> kurssData = observableArrayList();
     private List<Kurs> list = null;
     private Long updatedKursId;
-    private KursClient kursClient;
+    private KursClient kursClient=new KursClient();
     private ApplicationContext applicationContext;
+    private UtilDate utildate=new UtilDate<Kurs>();
 
     private void getAllKurs() {
-        list = new WebClientLehreClientService(webClient).getKursList().collectList().block();
+        list = kursClient.getKursList().collectList().block();
 
     }
 
@@ -106,13 +106,15 @@ public class KurswahlController implements Initializable {
         clmLehre.setCellValueFactory(new PropertyValueFactory("lehre"));
         clmLange.setCellValueFactory(new PropertyValueFactory("kurslang"));
         clmDauern.setCellValueFactory(new PropertyValueFactory("dauer"));
-        clmBeginAb.setCellValueFactory(new PropertyValueFactory("anfangAb)"));
-        clmBeginAb.setCellValueFactory(new PropertyValueFactory("endeBis)"));
+        clmBeginAb.setCellValueFactory(new PropertyValueFactory("anfangab"));
+        clmEndeBis.setCellValueFactory(new PropertyValueFactory("endebis"));
         clmKosten.setCellValueFactory(new PropertyValueFactory<>("kosten"));
         chKursWahl.setCellFactory(ActionButtonTableCell.forTableColumn("wahlen", (Kurs p) -> {
             loadVertragController(p);
             return p;
         }));
+       clmBeginAb.setCellFactory((TableColumn<Kurs, LocalDate> column) ->  utildate.convertColumn(column));
+       clmEndeBis.setCellFactory((TableColumn<Kurs, LocalDate> column) -> utildate.convertColumn(column));
 
         tbwKursAuswahlFensterTable.getItems().setAll(kurssData);
         tbwKursAuswahlFensterTable.getColumns().setAll(clmKursName, clmRaum, clmLehre,clmLange,clmDauern,clmBeginAb,clmEndeBis, chKursWahl);
