@@ -3,7 +3,6 @@ package com.educom.restclient.client;
 
 import com.educom.restclient.client.service.HttpService;
 import com.educom.restclient.model.Schuler;
-import com.educom.restclient.model.Vertrag;
 import com.educom.restclient.ui.controller.LoginController;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,11 +35,10 @@ public class SchulerClient implements HttpService<Schuler> {
     @Override
     public String delete(Long id) {
         final String uri = URL_DELETEBYID;
+        RestTemplate restTemplate = new RestTemplate();
         Map<String, String> params = new HashMap<>();
         params.put("id", String.valueOf(id));
-        System.out.println(id);
         HttpEntity<Schuler> entity = new HttpEntity<Schuler>(getHeader());
-        System.out.println(id);
         restTemplate.exchange(uri, HttpMethod.DELETE,entity,String.class, params);
         return "removed";
     }

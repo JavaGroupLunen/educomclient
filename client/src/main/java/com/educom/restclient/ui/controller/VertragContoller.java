@@ -146,6 +146,7 @@ public class VertragContoller implements Initializable {
     private UtilDate utildate=new UtilDate<Kurs>();
     @FXML
     void addVertragAction(ActionEvent event) {
+        vertragClient=new VertragClient(restTemplate);
         Schuler schuler = new Schuler();
         schuler.setFirstName(tfVorname.getText());
         schuler.setLastName(tfName.getText());
@@ -159,9 +160,9 @@ public class VertragContoller implements Initializable {
         schuler.setVater(tfVatername.getText());
         schuler.setMutter(tfMuttername.getText());
         schuler.setKlasse(tfKlasse.getText());
+        System.out.println(schuler);
         Set<Kurs> list = new ArrayList<Kurs>().stream().collect(Collectors.toSet());
         schuler.setKurses(list);
-        vertragClient=new VertragClient(restTemplate);
         Vertrag neuvertrag=new Vertrag();
         neuvertrag.setSchuler(schuler);
         neuvertrag.setVertragsbegin(cbmAnfangDatum.getValue());
@@ -252,8 +253,7 @@ public class VertragContoller implements Initializable {
             list = vertragClient.getSchulerByName(param).collectList().block();
         } else if (rbtEltern.isSelected()) {
             list = vertragClient.getVertragByEltern(param).collectList().block();
-        }else if (rbtStatus.isSelected()) {
-           // list = vertragClient.findByStatus(param);
+
     }
     }
 

@@ -9,7 +9,6 @@ import java.time.LocalDate;
 
 public abstract class Person {
 
-   protected long id;
     protected  String firstName;
     protected  String lastName ;
     protected  String email;
@@ -23,9 +22,7 @@ public abstract class Person {
     protected String plz;
 
 
-    public void setId(long id) {
-        this.id = id;
-    }
+
 
     public String getFirstName() {
         return firstName;
@@ -51,9 +48,7 @@ public abstract class Person {
         this.email = email;
     }
 
-    public long getId() {
-        return id;
-    }
+
 
     public String getPhoneNumber() {
         return phoneNumber;
