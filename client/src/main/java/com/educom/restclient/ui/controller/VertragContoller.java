@@ -5,6 +5,7 @@ import com.educom.restclient.client.VertragClient;
 import com.educom.restclient.model.*;
 import com.educom.restclient.util.ActionButtonTableCell;
 import com.educom.restclient.util.UtilDate;
+import com.jfoenix.controls.JFXTextField;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
@@ -18,13 +19,23 @@ import javafx.scene.Parent;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.GridPane;
+import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
+import javafx.scene.text.Text;
+import javafx.scene.text.TextFlow;
 import javafx.stage.Stage;
+import org.controlsfx.control.Notifications;
+import org.controlsfx.validation.ValidationSupport;
+import org.controlsfx.validation.Validator;
 import org.springframework.context.ApplicationContext;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.reactive.function.client.WebClient;
 
 import java.io.IOException;
 import java.net.URL;
+import java.time.LocalDateTime;
+import java.time.chrono.ChronoLocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -36,11 +47,13 @@ public class VertragContoller implements Initializable {
     private final WebClient webClient = WebClient.builder().build();
     private final RestTemplate restTemplate = new RestTemplate();
     @FXML
+    private GridPane grid=new GridPane();
+    @FXML
     private  Accordion accordion;
     @FXML
     private AnchorPane rootPane;
     @FXML
-    private Label tfadres;
+    private Label tfadres,lblvatername_error,lblSumme;
     @FXML
     private TextField tfVorname;
     @FXML
@@ -80,7 +93,7 @@ public class VertragContoller implements Initializable {
     @FXML
     private TextField tfKosten, tfEmail;
     @FXML
-    private TableView tbwAngemeldeteKurse;
+    private TableView tbwAngemeldeteKurse,tbwKurse;
     @FXML
     private TableColumn<Kurs, String> clmKursName;
     @FXML
@@ -92,11 +105,15 @@ public class VertragContoller implements Initializable {
     @FXML
     private Label lblvertragNo;
     @FXML
+    private TextFlow textFlow;
+    @FXML
     private TextField tfAnfangsdatum, tfInstitute, tfEndeDatum, tfMonatlichPrice;
     @FXML
     private ChoiceBox<ZahlungsType> cbxZahlungsType;
     @FXML
-    private TextField tfEinmaligePrice, tfAnmeldegebuhr, tfMaterialkosten, tfTotalprice, tfRabatprice,tfSumme,tfRestbetrag;
+    private TextField tfEinmaligePrice=new JFXTextField();
+    @FXML
+    private TextField tfAnmeldegebuhr, tfMaterialkosten, tfTotalprice, tfRabatprice,tfSumme,tfRestbetrag;
     @FXML
     private TextField tfVatername, tfRabatPercent, tfMuttername, tfElternAdres, tfElternPlz, tfIban, tfBic, tfElternTel, tfElternStadt, tfInhaber, tfVertragSearch;
     @FXML
@@ -122,7 +139,11 @@ public class VertragContoller implements Initializable {
     @FXML
     TableColumn<Kurs, Integer> clmLange;
     @FXML
+    Label error_label;
+    @FXML
     TableColumn<Kurs, Integer> clmDauern;
+    @FXML
+    private TreeTableView trbwSchuler;
     @FXML
     TableColumn<Kurs, Double> clmKursKosten;
     @FXML
@@ -144,6 +165,10 @@ public class VertragContoller implements Initializable {
     String pattern = "dd-MM-yyyy";
     DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern(pattern);
     private UtilDate utildate=new UtilDate<Kurs>();
+
+    private ValidationSupport validationSupport = new ValidationSupport();
+
+
     @FXML
     void addVertragAction(ActionEvent event) {
         vertragClient=new VertragClient(restTemplate);
@@ -167,20 +192,107 @@ public class VertragContoller implements Initializable {
         neuvertrag.setSchuler(schuler);
         neuvertrag.setVertragsbegin(cbmAnfangDatum.getValue());
         neuvertrag.setVertragsende(cbmEndeDatum.getValue());
-        neuvertrag.setAnmeldegebuhr(Double.valueOf(tfAnmeldegebuhr.getText()));
-        neuvertrag.setEinmaligeKosten(Double.valueOf(tfEinmaligePrice.getText()));
-        neuvertrag.setMaterialprice(Double.valueOf(tfMaterialkosten.getText()));
-        neuvertrag.setMonatlischeRate(Double.valueOf(tfMonatlichPrice.getText()));
-        neuvertrag.setRabat(Integer.valueOf(tfRabatprice.getText()));
-        neuvertrag.setRabatPercent(Integer.valueOf(tfRabatPercent.getText()));
-        neuvertrag.setSumme(Double.valueOf(tfSumme.getText()));
-        neuvertrag.setRestbetrag(Double.valueOf(tfRestbetrag.getText()));
+        if(!(tfEinmaligePrice.getText().trim().isEmpty())){
+            Double einmaligekosten=Double.valueOf(tfEinmaligePrice.getText());
+            neuvertrag.setEinmaligeKosten(einmaligekosten);
+
+        }
+
+        if(!(tfMaterialkosten.getText().trim().isEmpty())){
+            Double materialkosten=Double.valueOf(tfMaterialkosten.getText());
+            neuvertrag.setMaterialprice(materialkosten);
+        }
+        if(!(tfMonatlichPrice.getText().trim().isEmpty())){
+            Double monatlischePreise=Double.valueOf(tfMonatlichPrice.getText());
+            neuvertrag.setMonatlischeRate(monatlischePreise);
+        }
+        if(!(tfRabatprice.getText().trim().isEmpty())){
+            Integer rabat=Integer.valueOf(tfRabatprice.getText());
+            neuvertrag.setRabat(rabat);
+        }
+        if(!(tfRabatPercent.getText().trim().isEmpty())){
+            Integer rabatPercentes=Integer.valueOf(tfRabatPercent.getText());
+            neuvertrag.setRabatPercent(rabatPercentes);
+        }
+        if(!(tfSumme.getText().trim().isEmpty())){
+            Double summe=Double.valueOf(tfSumme.getText());
+            neuvertrag.setSumme(summe);
+        }
+        if(!(tfRestbetrag.getText().trim().isEmpty())){
+            Double restbetrag=Double.valueOf(tfRestbetrag.getText());
+            neuvertrag.setRestbetrag(restbetrag);
+        }
         neuvertrag.setZahlungstype(cbxZahlungsType.getValue());
-        vertragClient.add(neuvertrag);
-        clearField();
-        clearKursAuswahlfield();
-        getAllVertrage();
+        if(validdation()){
+            vertragClient.add(neuvertrag);
+            clearField();
+            clearKursAuswahlfield();
+            getAllVertrage();
+
+        }else {
+            Notifications notificationBuilder = Notifications.create();
+            notificationBuilder.owner(getVertragWindows());
+            notificationBuilder.showWarning();
+        }
     }
+
+    public boolean isValidName(String s){
+        String regex="[A-Za-z\\s]+";
+        return s.matches(regex);//returns true if input and regex matches otherwise false;
+    }
+
+ private Text errormessage(String s){
+       Text error= new Text(s);
+       error.setFont(new Font("Times New Roman", 12));
+       error.setFill(Color.RED);
+       return error;
+ }
+ private void showWahrnungMessage(){
+     textFlow.setVisible(true);
+     if(tfVatername.getText().trim().isEmpty()){textFlow.getChildren().add(errormessage("Invalid Vater name\n"));}
+     if(tfAnmeldegebuhr.getText().trim().isEmpty()){ textFlow.getChildren().add(errormessage("Invalid Anmelde Gebuhr\n"));}
+     if(tfMaterialkosten.getText().trim().isEmpty()){ textFlow.getChildren().add(errormessage("Invalid Materialkosten\n"));}
+     if(tfMonatlichPrice.getText().trim().isEmpty()){textFlow.getChildren().add(errormessage("Invalid MonatlichPrice\n"));}
+     if(tfRabatprice.getText().trim().isEmpty()){ textFlow.getChildren().add(errormessage("Invalid Rabatprice\n"));}
+     if(tfRabatPercent.getText().trim().isEmpty()){ textFlow.getChildren().add(errormessage("Invalid RabatPercent\n"));}
+     if(tfMonatlichPrice.getText().trim().isEmpty()){textFlow.getChildren().add(errormessage("Invalid MonatlichPrice\n"));}
+     if(cbmAnfangDatum.getValue()==null){ textFlow.getChildren().add(errormessage("Invalid Anfang Datum oder endedatum\n"));}
+     if(tfRestbetrag.getText().trim().isEmpty()){ textFlow.getChildren().add(errormessage("Invalid Restbetrag\n"));}
+     if(cbxZahlungsType.getValue().name().isEmpty()){textFlow.getChildren().add(errormessage("Invalid Zahlungstype\n"));}
+     if(cmbGdatum.getValue().isAfter(ChronoLocalDate.from(LocalDateTime.now()))){ textFlow.getChildren().add(errormessage("Invalid Geburstdatum\n"));}
+     if(cbxGeschlecht.getValue().name().isEmpty()){ textFlow.getChildren().add(errormessage("Invalid Geschlecht\n"));}
+     if(tfAdresse.getText().trim().isEmpty()){textFlow.getChildren().add(errormessage("Invalid Schuler adresse\n"));}
+     if(tfTel.getText().trim().isEmpty()){ textFlow.getChildren().add(errormessage("Invalid tel\n"));}
+     if(tfPlz.getText().trim().isEmpty()){ textFlow.getChildren().add(errormessage("Invalid Plz\n"));}
+
+ }
+
+
+    private boolean validdation(){
+        textFlow.getChildren().clear();
+        showWahrnungMessage();
+        validationSupport.registerValidator(tfAnmeldegebuhr, Validator.createEmptyValidator("Text is required"));
+        validationSupport.registerValidator(tfMaterialkosten, Validator.createEmptyValidator("Text is required"));
+        validationSupport.registerValidator(tfMonatlichPrice, Validator.createEmptyValidator("Text is required"));
+        validationSupport.registerValidator(tfRabatprice, Validator.createEmptyValidator("Text is required"));
+        validationSupport.registerValidator(tfVatername, Validator.createEmptyValidator("Text is required"));
+        validationSupport.registerValidator(tfMuttername, Validator.createEmptyValidator("Text is required"));
+        validationSupport.registerValidator(tfName, Validator.createEmptyValidator("Text is required"));
+        validationSupport.registerValidator(tfVorname, Validator.createEmptyValidator("Text is required"));
+        Boolean name=tfName.getText().trim().isEmpty()?false:true;
+        Boolean vorname=tfVorname.getText().trim().isEmpty()?false:true;
+        Boolean kursname=tfKursName.getText().trim().isEmpty()?false:true;
+        Boolean adresse=tfAdresse.getText().trim().isEmpty()?false:true;
+        Boolean telf=tfTel.getText().trim().isEmpty()?false:true;
+        Boolean plz=tfPlz.getText().trim().isEmpty()?false:true;
+        Boolean stadt=tfStadt.getText().trim().isEmpty()?false:true;
+        Boolean vater=tfVatername.getText().trim().isEmpty()?false:true;
+        Boolean mutter=tfMuttername.getText().trim().isEmpty()?false:true;
+
+        System.out.println(name&&vorname&&kursname&&adresse&&telf&&plz&&stadt&&vater&&mutter);
+        return name&&vorname&&kursname&&adresse&&telf&&plz&&stadt&&vater&&mutter;
+    }
+
 
 //    private void fillTableview() {
 //        if (tfVertragSearch.getText().trim().isEmpty()) {
@@ -196,12 +308,46 @@ public class VertragContoller implements Initializable {
 //       tbwVertrag.setItems(vertragsDatei);
 //    }
 
+
+private ChangeListener<String> summeListener(){
+    return new ChangeListener<String>() {
+        @Override
+        public void changed(ObservableValue<? extends String> observable,
+                            String oldValue, String newValue) {
+            if (!newValue.trim().isEmpty()) {
+          //  TODO:Bos olan Field lar yüzünden hata veriyor. if kontrol eklenerek hata clzülebilir
+                Double summe=Double.valueOf(tfEinmaligePrice.getText())
+                        +Double.valueOf(tfMaterialkosten.getText())
+                        +Double.valueOf(tfMonatlichPrice.getText())*12
+                        -(Double.valueOf(tfRabatprice.getText())
+                        -(Double.valueOf(tfRabatPercent.getText())*Double.valueOf(tfSumme.getText())/100));
+                tfRestbetrag.setText(summe.toString());
+                lblSumme=new Label(summe.toString());
+                System.out.println(summe);
+            }
+
+        }
+    };
+}
+    private void summeRechnen() {
+        tfEinmaligePrice.textProperty().addListener(summeListener());
+        tfRabatPercent.textProperty().addListener(summeListener());
+        tfMonatlichPrice.textProperty().addListener(summeListener());
+        tfMaterialkosten.textProperty().addListener(summeListener());
+    }
+
+    public void setMessage(Label l, String message, Color color){
+        l.setText(message);
+        l.setTextFill(color);
+        l.setVisible(true);
+    }
+
+
     private void clearField() {
         tfVorname.setText("");
         tfName.setText("");
         tfEmail.setText("");
         tfAdresse.setText("");
-        //tfGeburstdatum.setText("");
         tfTel.setText("");
         tfPlz.setText("");
         tfStadt.setText("");
@@ -230,8 +376,6 @@ public class VertragContoller implements Initializable {
             @Override
             public void changed(ObservableValue<? extends String> observable,
                                 String oldValue, String newValue) {
-
-                System.out.println(" Text Changed to  " + newValue + "\n");
                 if (!newValue.trim().isEmpty()) {
                     findBy(newValue);
                 }
@@ -366,7 +510,10 @@ public class VertragContoller implements Initializable {
         tbwKursAuswahlFill();
         accordion.setExpandedPane(tpSchulerinformationen);
         //  tbwKursAuswahlFill();
+        summeRechnen();
+
     }
+
 
     private void fillcomboBox() {
         cbxGeschlecht.getItems().addAll(Gender.values());

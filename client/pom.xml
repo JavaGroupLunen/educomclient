@@ -28,6 +28,7 @@
 			<artifactId>spring-boot-starter-rsocket</artifactId>
 		</dependency>
 
+
 		<dependency>
 			<groupId>io.projectreactor</groupId>
 			<artifactId>reactor-test</artifactId>
@@ -103,6 +104,15 @@
 <!--			<groupId>org.springframework</groupId>-->
 <!--			<artifactId>spring-web</artifactId>-->
 <!--		</dependency>-->
+		<!-- https://mvnrepository.com/artifact/com.jfoenix/jfoenix -->
+		<!-- https://mvnrepository.com/artifact/org.controlsfx/controlsfx -->
+		<dependency>
+			<groupId>org.controlsfx</groupId>
+			<artifactId>controlsfx</artifactId>
+			<version>11.0.2</version>
+		</dependency>
+
+
 	</dependencies>
 
 	<build>
@@ -130,6 +140,11 @@
 			<layout>default</layout>
 		</repository>
 	</repositories>
+
+
+
+
+
 
 
 </project>

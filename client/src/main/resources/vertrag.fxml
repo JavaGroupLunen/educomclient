@@ -13,26 +13,29 @@
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.control.TitledPane?>
+<?import javafx.scene.control.TreeTableColumn?>
+<?import javafx.scene.control.TreeTableView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.TextFlow?>
 
-<AnchorPane fx:id="rootPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="592.0" prefWidth="1042.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.educom.restclient.ui.controller.VertragContoller">
+<AnchorPane fx:id="rootPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="591.0" prefWidth="1135.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.educom.restclient.ui.controller.VertragContoller">
    <children>
-      <SplitPane dividerPositions="0.4951644100580271" prefHeight="592.0" prefWidth="1042.0">
+      <SplitPane dividerPositions="0.44718909710391824" prefHeight="591.0" prefWidth="1126.0">
         <items>
-          <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="590.0" prefWidth="368.0">
+          <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="549.0" prefWidth="481.0">
                <children>
-                  <Accordion fx:id="accordion" prefHeight="585.0" prefWidth="511.0">
+                  <Accordion fx:id="accordion" prefHeight="583.0" prefWidth="499.0">
                     <panes>
                       <TitledPane fx:id="tpSchulerinformationen" animated="false" text="Schulerinformationen">
                            <content>
                               <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                                  <children>
-                                    <GridPane alignment="BASELINE_RIGHT" layoutX="26.4" prefHeight="455.0" prefWidth="497.0" AnchorPane.leftAnchor="16.0" AnchorPane.rightAnchor="15.0">
+                                    <GridPane alignment="BASELINE_RIGHT" layoutX="16.4" prefHeight="469.0" prefWidth="478.0" AnchorPane.leftAnchor="6.0" AnchorPane.rightAnchor="13.0">
                                        <columnConstraints>
                                           <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
                                           <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
@@ -43,13 +46,13 @@
                                           <RowConstraints maxHeight="296.0" minHeight="7.0" prefHeight="33.0" vgrow="SOMETIMES" />
                                           <RowConstraints maxHeight="270.0" minHeight="10.0" prefHeight="40.0" vgrow="SOMETIMES" />
                                           <RowConstraints maxHeight="239.0" minHeight="10.0" prefHeight="29.0" vgrow="SOMETIMES" />
-                                          <RowConstraints maxHeight="239.0" minHeight="10.0" prefHeight="24.0" vgrow="SOMETIMES" />
-                                          <RowConstraints maxHeight="276.0" minHeight="10.0" prefHeight="28.0" vgrow="SOMETIMES" />
-                                          <RowConstraints maxHeight="276.0" minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                                          <RowConstraints maxHeight="284.0" minHeight="10.0" prefHeight="31.0" vgrow="SOMETIMES" />
-                                          <RowConstraints maxHeight="287.0" minHeight="0.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                                          <RowConstraints maxHeight="287.0" minHeight="10.0" prefHeight="33.0" vgrow="SOMETIMES" />
-                                          <RowConstraints maxHeight="287.0" minHeight="10.0" prefHeight="86.0" vgrow="SOMETIMES" />
+                                          <RowConstraints maxHeight="239.0" minHeight="10.0" prefHeight="34.0" vgrow="SOMETIMES" />
+                                          <RowConstraints maxHeight="276.0" minHeight="10.0" prefHeight="31.0" vgrow="SOMETIMES" />
+                                          <RowConstraints maxHeight="276.0" minHeight="5.0" prefHeight="31.0" vgrow="SOMETIMES" />
+                                          <RowConstraints maxHeight="284.0" minHeight="10.0" prefHeight="20.0" vgrow="SOMETIMES" />
+                                          <RowConstraints maxHeight="287.0" minHeight="0.0" prefHeight="43.0" vgrow="SOMETIMES" />
+                                          <RowConstraints maxHeight="287.0" minHeight="10.0" prefHeight="35.0" vgrow="SOMETIMES" />
+                                          <RowConstraints maxHeight="287.0" minHeight="2.0" prefHeight="33.0" vgrow="SOMETIMES" />
                                        </rowConstraints>
                                        <children>
                                           <Label text="Label" />
@@ -65,7 +68,7 @@
                                           <Label prefHeight="16.0" prefWidth="44.0" text="Stadt" GridPane.rowIndex="7" />
                                           <Label prefHeight="16.0" prefWidth="237.0" text="Tel" GridPane.rowIndex="8" />
                                           <TextField fx:id="tfAdresse" GridPane.columnIndex="1" GridPane.rowIndex="5" />
-                                          <ComboBox fx:id="cbxGeschlecht" prefHeight="26.0" prefWidth="249.0" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+                                          <ComboBox fx:id="cbxGeschlecht" prefHeight="26.0" prefWidth="289.0" GridPane.columnIndex="1" GridPane.rowIndex="4" />
                                           <TextField fx:id="tfPlz" GridPane.columnIndex="1" GridPane.rowIndex="6" />
                                           <TextField fx:id="tfStadt" GridPane.columnIndex="1" GridPane.rowIndex="7" />
                                           <TextField fx:id="tfTel" GridPane.columnIndex="1" GridPane.rowIndex="8" />
@@ -75,20 +78,20 @@
                                           <TextField fx:id="tfKlasse" GridPane.columnIndex="1" GridPane.rowIndex="10" />
                                           <TextField fx:id="tfEmail" GridPane.columnIndex="1" GridPane.rowIndex="11" />
                                           <Label prefHeight="16.0" prefWidth="116.0" text="Email" GridPane.rowIndex="11" />
-                                          <DatePicker fx:id="cmbGdatum" prefHeight="26.0" prefWidth="253.0" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+                                          <DatePicker fx:id="cmbGdatum" prefHeight="26.0" prefWidth="282.0" GridPane.columnIndex="1" GridPane.rowIndex="3" />
                                        </children>
                                     </GridPane>
                                  </children>
                               </AnchorPane>
                            </content>
                       </TitledPane>
-                      <TitledPane fx:id="tpKursinformationen" animated="false" prefHeight="507.0" prefWidth="532.0" text="Kursinformationen">
+                      <TitledPane fx:id="tpKursinformationen" animated="false" prefHeight="497.0" prefWidth="512.0" text="Kursinformationen">
                            <content>
                               <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="480.0" prefWidth="532.0">
                                  <children>
-                                    <VBox prefHeight="502.0" prefWidth="500.0">
+                                    <VBox prefHeight="467.0" prefWidth="499.0">
                                        <children>
-                                          <GridPane prefHeight="262.0" prefWidth="552.0">
+                                          <GridPane prefHeight="362.0" prefWidth="459.0">
                                              <columnConstraints>
                                                 <ColumnConstraints hgrow="SOMETIMES" maxWidth="259.0" minWidth="10.0" prefWidth="190.0" />
                                                 <ColumnConstraints hgrow="SOMETIMES" maxWidth="308.0" minWidth="10.0" prefWidth="308.0" />
@@ -228,24 +231,24 @@
                         <content>
                           <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                                  <children>
-                                    <GridPane prefHeight="497.0" prefWidth="530.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0">
+                                    <GridPane layoutX="15.4" prefHeight="472.0" prefWidth="492.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="0.0">
                                       <columnConstraints>
                                         <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
                                         <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
                                       </columnConstraints>
                                       <rowConstraints>
-                                        <RowConstraints maxHeight="95.0" minHeight="10.0" prefHeight="95.0" vgrow="SOMETIMES" />
-                                        <RowConstraints maxHeight="229.0" minHeight="10.0" prefHeight="44.0" vgrow="SOMETIMES" />
+                                        <RowConstraints maxHeight="95.0" minHeight="10.0" prefHeight="69.0" vgrow="SOMETIMES" />
+                                        <RowConstraints maxHeight="229.0" minHeight="10.0" prefHeight="34.0" vgrow="SOMETIMES" />
                                           <RowConstraints maxHeight="296.0" minHeight="7.0" prefHeight="37.0" vgrow="SOMETIMES" />
                                           <RowConstraints maxHeight="270.0" minHeight="9.0" prefHeight="38.0" vgrow="SOMETIMES" />
-                                        <RowConstraints maxHeight="239.0" minHeight="10.0" prefHeight="48.0" vgrow="SOMETIMES" />
+                                        <RowConstraints maxHeight="239.0" minHeight="10.0" prefHeight="34.0" vgrow="SOMETIMES" />
                                           <RowConstraints maxHeight="239.0" minHeight="10.0" prefHeight="41.0" vgrow="SOMETIMES" />
-                                          <RowConstraints maxHeight="284.0" minHeight="10.0" prefHeight="46.0" vgrow="SOMETIMES" />
-                                          <RowConstraints maxHeight="284.0" minHeight="10.0" prefHeight="46.0" vgrow="SOMETIMES" />
-                                          <RowConstraints maxHeight="284.0" minHeight="10.0" prefHeight="46.0" vgrow="SOMETIMES" />
-                                          <RowConstraints maxHeight="284.0" minHeight="10.0" prefHeight="46.0" vgrow="SOMETIMES" />
-                                          <RowConstraints maxHeight="402.0" minHeight="10.0" prefHeight="53.0" vgrow="SOMETIMES" />
-                                          <RowConstraints maxHeight="402.0" minHeight="10.0" prefHeight="89.0" vgrow="SOMETIMES" />
+                                          <RowConstraints maxHeight="284.0" minHeight="10.0" prefHeight="29.0" vgrow="SOMETIMES" />
+                                          <RowConstraints maxHeight="284.0" minHeight="10.0" prefHeight="35.0" vgrow="SOMETIMES" />
+                                          <RowConstraints maxHeight="284.0" minHeight="10.0" prefHeight="39.0" vgrow="SOMETIMES" />
+                                          <RowConstraints maxHeight="284.0" minHeight="10.0" prefHeight="32.0" vgrow="SOMETIMES" />
+                                          <RowConstraints maxHeight="402.0" minHeight="10.0" prefHeight="28.0" vgrow="SOMETIMES" />
+                                          <RowConstraints maxHeight="402.0" minHeight="10.0" prefHeight="40.0" vgrow="SOMETIMES" />
                                       </rowConstraints>
                                        <children>
                                           <Label text="Vertrag No" />
@@ -263,7 +266,6 @@
                                           <TextField fx:id="tfRestbetrag" GridPane.columnIndex="1" GridPane.rowIndex="10" />
                                           <Label text="Restbetrag" GridPane.rowIndex="10" />
                                           <Label layoutX="10.0" layoutY="353.0" text="Summe" GridPane.rowIndex="11" />
-                                          <TextField fx:id="tfSumme" layoutX="270.0" layoutY="348.0" GridPane.columnIndex="1" GridPane.rowIndex="11" />
                                           <Label layoutX="10.0" layoutY="283.0" text="Materialkosten" GridPane.rowIndex="6" />
                                           <TextField fx:id="tfMaterialkosten" layoutX="270.0" layoutY="278.0" GridPane.columnIndex="1" GridPane.rowIndex="6" />
                                           <Label layoutX="10.0" layoutY="297.0" text="Rabatprice" GridPane.rowIndex="8" />
@@ -272,20 +274,21 @@
                                           <TextField fx:id="tfRabatPercent" layoutX="270.0" layoutY="322.0" GridPane.columnIndex="1" GridPane.rowIndex="9" />
                                           <DatePicker fx:id="cbmAnfangDatum" prefHeight="26.0" prefWidth="261.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
                                           <DatePicker fx:id="cbmEndeDatum" prefHeight="26.0" prefWidth="259.0" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                                          <Label fx:id="lblSumme" GridPane.columnIndex="1" GridPane.rowIndex="11" />
                                        </children>
                                     </GridPane>
                                  </children>
                               </AnchorPane>
                         </content>
                       </TitledPane>
-                        <TitledPane fx:id="tpElterninformationen" animated="false" text="Elterninformationen">
+                        <TitledPane fx:id="tpElterninformationen" animated="false" prefHeight="573.0" prefWidth="616.0" text="Elterninformationen">
                            <content>
                               <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                                  <children>
-                                    <GridPane alignment="BASELINE_RIGHT" layoutX="26.4" prefHeight="479.0" prefWidth="519.0" AnchorPane.leftAnchor="16.0" AnchorPane.rightAnchor="15.0">
+                                    <GridPane alignment="BASELINE_RIGHT" layoutX="3.4000000000000004" prefHeight="419.0" prefWidth="499.0" AnchorPane.leftAnchor="-7.0" AnchorPane.rightAnchor="5.0">
                                        <columnConstraints>
                                           <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-                                          <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                          <ColumnConstraints hgrow="SOMETIMES" maxWidth="244.0" minWidth="10.0" prefWidth="244.0" />
                                        </columnConstraints>
                                        <rowConstraints>
                                           <RowConstraints maxHeight="94.0" minHeight="10.0" prefHeight="70.0" vgrow="SOMETIMES" />
@@ -314,6 +317,8 @@
                                           <TextField fx:id="tfElternStadt" GridPane.columnIndex="1" GridPane.rowIndex="6" />
                                           <TextField fx:id="tfElternTel" GridPane.columnIndex="1" GridPane.rowIndex="7" />
                                           <Button fx:id="btnVertragAdd" mnemonicParsing="false" onAction="#addVertragAction" prefHeight="26.0" prefWidth="248.0" text="Add" GridPane.columnIndex="1" GridPane.rowIndex="8" />
+                                          <Label fx:id="error_label" GridPane.rowIndex="8" />
+                                          <TextFlow fx:id="textFlow" prefHeight="200.0" prefWidth="200.0" visible="false" GridPane.rowIndex="8" />
                                        </children>
                                     </GridPane>
                                  </children>
@@ -324,50 +329,110 @@
                   </Accordion>
                </children>
             </AnchorPane>
-          <AnchorPane fx:id="vertragRechtPanel" minHeight="0.0" minWidth="0.0" prefHeight="590.0" prefWidth="384.0">
+          <AnchorPane fx:id="vertragRechtPanel" minHeight="0.0" minWidth="0.0" prefHeight="549.0" prefWidth="621.0">
                <children>
-                  <VBox layoutX="1.0" prefHeight="559.0" prefWidth="479.0" AnchorPane.leftAnchor="1.0" AnchorPane.rightAnchor="6.0" AnchorPane.topAnchor="5.0">
-                     <children>
-                        <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="16.0" prefWidth="586.0" text="Search">
-                           <VBox.margin>
-                              <Insets bottom="10.0" top="10.0" />
-                           </VBox.margin>
-                        </Label>
-                        <HBox alignment="TOP_CENTER" opacity="0.74">
+                  <SplitPane dividerPositions="0.444633730834753" orientation="VERTICAL" prefHeight="589.0" prefWidth="617.0">
+                    <items>
+                      <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="338.0" prefWidth="607.0">
                            <children>
-                              <RadioButton fx:id="rbtVertragnum" mnemonicParsing="false" prefHeight="18.0" prefWidth="154.0" text="vertragnum">
-                                 <opaqueInsets>
-                                    <Insets left="5.0" right="5.0" />
-                                 </opaqueInsets>
-                              </RadioButton>
-                              <RadioButton fx:id="rbtSchuler" mnemonicParsing="false" prefHeight="18.0" prefWidth="111.0" text="schuler" />
-                              <RadioButton fx:id="rbtEltern" mnemonicParsing="false" prefHeight="18.0" prefWidth="113.0" text="eltern" />
-                              <RadioButton fx:id="rbtStatus" mnemonicParsing="false" prefHeight="18.0" prefWidth="79.0" text="status" />
+                              <VBox prefHeight="269.0" prefWidth="604.0" AnchorPane.leftAnchor="1.0" AnchorPane.rightAnchor="-1.0" AnchorPane.topAnchor="5.0">
+                                 <children>
+                                    <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="16.0" prefWidth="586.0" text="Search">
+                                       <VBox.margin>
+                                          <Insets bottom="10.0" top="10.0" />
+                                       </VBox.margin>
+                                    </Label>
+                                    <HBox alignment="TOP_CENTER" opacity="0.74">
+                                       <children>
+                                          <RadioButton fx:id="rbtVertragnum" mnemonicParsing="false" prefHeight="18.0" prefWidth="154.0" text="vertragnum">
+                                             <opaqueInsets>
+                                                <Insets left="5.0" right="5.0" />
+                                             </opaqueInsets>
+                                          </RadioButton>
+                                          <RadioButton fx:id="rbtSchuler" mnemonicParsing="false" prefHeight="18.0" prefWidth="111.0" text="schuler" />
+                                          <RadioButton fx:id="rbtEltern" mnemonicParsing="false" prefHeight="18.0" prefWidth="113.0" text="eltern" />
+                                          <RadioButton fx:id="rbtStatus" mnemonicParsing="false" prefHeight="18.0" prefWidth="79.0" text="status" />
+                                       </children>
+                                       <opaqueInsets>
+                                          <Insets bottom="20.0" top="5.0" />
+                                       </opaqueInsets>
+                                    </HBox>
+                                    <TextField fx:id="tfVertragSearch" prefHeight="26.0" prefWidth="471.0" />
+                                    <TableView fx:id="tbwVertrag" prefHeight="261.0" prefWidth="636.0">
+                                      <columns>
+                                          <TableColumn fx:id="clmSchuler" prefWidth="63.0" text="schuler" />
+                                        <TableColumn fx:id="clmVertragsdatum" prefWidth="64.0" text="vdatum" />
+                                        <TableColumn fx:id="clmVertragsbegin" prefWidth="74.0" text="vbegin" />
+                                          <TableColumn fx:id="clmVertragsende" prefWidth="97.0" text="vendedatum" />
+                                          <TableColumn fx:id="clmZahlungstype" prefWidth="51.0" text="zahlungstype" />
+                                          <TableColumn fx:id="clmEinmaligeKosten" prefWidth="122.0" text="eKosten" />
+                                          <TableColumn fx:id="clmAnmeldegebuhr" prefWidth="74.0" text="anmlgebühr" />
+                                          <TableColumn fx:id="clmMaterialprice" prefWidth="83.0" text="materialprice" />
+                                          <TableColumn fx:id="clmSumme" prefWidth="38.0" text="summe" />
+                                          <TableColumn fx:id="clmMonatlischeRate" prefWidth="87.0" text="rate" />
+                                          <TableColumn fx:id="clmRestbetrag" prefWidth="106.0" text="restbetrag" />
+                                          <TableColumn fx:id="clmRabat" prefWidth="98.0" text="rabat(preise)" />
+                                          <TableColumn fx:id="clmRabatPercent" prefWidth="110.0" text="rabat(%)" />
+                                      </columns>
+                                    </TableView>
+                                 </children>
+                              </VBox>
                            </children>
-                           <opaqueInsets>
-                              <Insets bottom="20.0" top="5.0" />
-                           </opaqueInsets>
-                        </HBox>
-                        <TextField fx:id="tfVertragSearch" prefHeight="26.0" prefWidth="471.0" />
-                        <TableView fx:id="tbwVertrag" prefHeight="479.0" prefWidth="76.0">
-                          <columns>
-                              <TableColumn fx:id="clmSchuler" prefWidth="63.0" text="schuler" />
-                            <TableColumn fx:id="clmVertragsdatum" prefWidth="64.0" text="vdatum" />
-                            <TableColumn fx:id="clmVertragsbegin" prefWidth="74.0" text="vbegin" />
-                              <TableColumn fx:id="clmVertragsende" prefWidth="97.0" text="vendedatum" />
-                              <TableColumn fx:id="clmZahlungstype" prefWidth="51.0" text="zahlungstype" />
-                              <TableColumn fx:id="clmEinmaligeKosten" prefWidth="122.0" text="eKosten" />
-                              <TableColumn fx:id="clmAnmeldegebuhr" prefWidth="74.0" text="anmlgebühr" />
-                              <TableColumn fx:id="clmMaterialprice" prefWidth="83.0" text="materialprice" />
-                              <TableColumn fx:id="clmSumme" prefWidth="38.0" text="summe" />
-                              <TableColumn fx:id="clmMonatlischeRate" prefWidth="87.0" text="rate" />
-                              <TableColumn fx:id="clmRestbetrag" prefWidth="106.0" text="restbetrag" />
-                              <TableColumn fx:id="clmRabat" prefWidth="98.0" text="rabat(preise)" />
-                              <TableColumn fx:id="clmRabatPercent" prefWidth="110.0" text="rabat(%)" />
-                          </columns>
-                        </TableView>
-                     </children>
-                  </VBox>
+                        </AnchorPane>
+                      <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="100.0" prefWidth="160.0">
+                           <children>
+                              <VBox prefHeight="269.0" prefWidth="604.0">
+                                 <children>
+                                    <TreeTableView fx:id="trbwSchuler" prefHeight="138.0" prefWidth="604.0">
+                                      <columns>
+                                        <TreeTableColumn prefWidth="75.0" text="C1" />
+                                        <TreeTableColumn prefWidth="75.0" text="C2" />
+                                      </columns>
+                                    </TreeTableView>
+                                    <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="16.0" prefWidth="586.0" text="Search">
+                                       <VBox.margin>
+                                          <Insets bottom="10.0" top="10.0" />
+                                       </VBox.margin>
+                                    </Label>
+                                    <HBox alignment="TOP_CENTER" opacity="0.74">
+                                       <children>
+                                          <RadioButton fx:id="rbtVertragnum1" mnemonicParsing="false" prefHeight="18.0" prefWidth="154.0" text="vertragnum">
+                                             <opaqueInsets>
+                                                <Insets left="5.0" right="5.0" />
+                                             </opaqueInsets>
+                                          </RadioButton>
+                                          <RadioButton fx:id="rbtSchuler1" mnemonicParsing="false" prefHeight="18.0" prefWidth="111.0" text="schuler" />
+                                          <RadioButton fx:id="rbtEltern1" mnemonicParsing="false" prefHeight="18.0" prefWidth="113.0" text="eltern" />
+                                          <RadioButton fx:id="rbtStatus1" mnemonicParsing="false" prefHeight="18.0" prefWidth="79.0" text="status" />
+                                       </children>
+                                       <opaqueInsets>
+                                          <Insets bottom="20.0" top="5.0" />
+                                       </opaqueInsets>
+                                    </HBox>
+                                    <TextField fx:id="tfVertragSearch1" prefHeight="26.0" prefWidth="471.0" />
+                                    <TableView fx:id="tbwKurse" prefHeight="87.0" prefWidth="604.0">
+                                       <columns>
+                                          <TableColumn fx:id="clmSchuler1" prefWidth="63.0" text="schuler" />
+                                          <TableColumn fx:id="clmVertragsdatum1" prefWidth="64.0" text="vdatum" />
+                                          <TableColumn fx:id="clmVertragsbegin1" prefWidth="74.0" text="vbegin" />
+                                          <TableColumn fx:id="clmVertragsende1" prefWidth="97.0" text="vendedatum" />
+                                          <TableColumn fx:id="clmZahlungstype1" prefWidth="51.0" text="zahlungstype" />
+                                          <TableColumn fx:id="clmEinmaligeKosten1" prefWidth="122.0" text="eKosten" />
+                                          <TableColumn fx:id="clmAnmeldegebuhr1" prefWidth="74.0" text="anmlgebühr" />
+                                          <TableColumn fx:id="clmMaterialprice1" prefWidth="83.0" text="materialprice" />
+                                          <TableColumn fx:id="clmSumme1" prefWidth="38.0" text="summe" />
+                                          <TableColumn fx:id="clmMonatlischeRate1" prefWidth="87.0" text="rate" />
+                                          <TableColumn fx:id="clmRestbetrag1" prefWidth="106.0" text="restbetrag" />
+                                          <TableColumn fx:id="clmRabat1" prefWidth="98.0" text="rabat(preise)" />
+                                          <TableColumn fx:id="clmRabatPercent1" prefWidth="110.0" text="rabat(%)" />
+                                       </columns>
+                                    </TableView>
+                                 </children>
+                              </VBox>
+                           </children>
+                        </AnchorPane>
+                    </items>
+                  </SplitPane>
                </children>
             </AnchorPane>
         </items>
