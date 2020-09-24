@@ -34,8 +34,6 @@ import org.springframework.web.reactive.function.client.WebClient;
 
 import java.io.IOException;
 import java.net.URL;
-import java.time.LocalDateTime;
-import java.time.chrono.ChronoLocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -214,10 +212,10 @@ public class VertragContoller implements Initializable {
             Integer rabatPercentes=Integer.valueOf(tfRabatPercent.getText());
             neuvertrag.setRabatPercent(rabatPercentes);
         }
-        if(!(tfSumme.getText().trim().isEmpty())){
-            Double summe=Double.valueOf(tfSumme.getText());
-            neuvertrag.setSumme(summe);
-        }
+//        if(!(tfSumme.getText().trim().isEmpty())){
+//            Double summe=Double.valueOf(tfSumme.getText());
+//            neuvertrag.setSumme(summe);
+//        }
         if(!(tfRestbetrag.getText().trim().isEmpty())){
             Double restbetrag=Double.valueOf(tfRestbetrag.getText());
             neuvertrag.setRestbetrag(restbetrag);
@@ -258,9 +256,9 @@ public class VertragContoller implements Initializable {
      if(tfMonatlichPrice.getText().trim().isEmpty()){textFlow.getChildren().add(errormessage("Invalid MonatlichPrice\n"));}
      if(cbmAnfangDatum.getValue()==null){ textFlow.getChildren().add(errormessage("Invalid Anfang Datum oder endedatum\n"));}
      if(tfRestbetrag.getText().trim().isEmpty()){ textFlow.getChildren().add(errormessage("Invalid Restbetrag\n"));}
-     if(cbxZahlungsType.getValue().name().isEmpty()){textFlow.getChildren().add(errormessage("Invalid Zahlungstype\n"));}
-     if(cmbGdatum.getValue().isAfter(ChronoLocalDate.from(LocalDateTime.now()))){ textFlow.getChildren().add(errormessage("Invalid Geburstdatum\n"));}
-     if(cbxGeschlecht.getValue().name().isEmpty()){ textFlow.getChildren().add(errormessage("Invalid Geschlecht\n"));}
+//     if(cbxZahlungsType.getValue().name().isEmpty()){textFlow.getChildren().add(errormessage("Invalid Zahlungstype\n"));}
+//     if(cmbGdatum.getValue().isAfter(ChronoLocalDate.from(LocalDateTime.now()))){ textFlow.getChildren().add(errormessage("Invalid Geburstdatum\n"));}
+//     if(cbxGeschlecht.getValue().name().isEmpty()){ textFlow.getChildren().add(errormessage("Invalid Geschlecht\n"));}
      if(tfAdresse.getText().trim().isEmpty()){textFlow.getChildren().add(errormessage("Invalid Schuler adresse\n"));}
      if(tfTel.getText().trim().isEmpty()){ textFlow.getChildren().add(errormessage("Invalid tel\n"));}
      if(tfPlz.getText().trim().isEmpty()){ textFlow.getChildren().add(errormessage("Invalid Plz\n"));}
@@ -307,28 +305,40 @@ public class VertragContoller implements Initializable {
 //       vertragsDatei= (ObservableList<Vertrag>) vertragClient.getAllVertrag().stream().collect(Collectors.toList());
 //       tbwVertrag.setItems(vertragsDatei);
 //    }
-
+private  double summe=0;
 
 private ChangeListener<String> summeListener(){
+
     return new ChangeListener<String>() {
         @Override
         public void changed(ObservableValue<? extends String> observable,
                             String oldValue, String newValue) {
             if (!newValue.trim().isEmpty()) {
-          //  TODO:Bos olan Field lar yüzünden hata veriyor. if kontrol eklenerek hata clzülebilir
-                Double summe=Double.valueOf(tfEinmaligePrice.getText())
-                        +Double.valueOf(tfMaterialkosten.getText())
-                        +Double.valueOf(tfMonatlichPrice.getText())*12
-                        -(Double.valueOf(tfRabatprice.getText())
-                        -(Double.valueOf(tfRabatPercent.getText())*Double.valueOf(tfSumme.getText())/100));
-                tfRestbetrag.setText(summe.toString());
-                lblSumme=new Label(summe.toString());
-                System.out.println(summe);
+          //  TODO:Düzgün calismiyor
+                if(!(tfEinmaligePrice.getText().trim().isEmpty())){
+                 summe =+Double.valueOf(tfEinmaligePrice.getText());
+                }
+                if(!(tfMaterialkosten.getText().trim().isEmpty())){
+                 summe =+Double.valueOf(tfMaterialkosten.getText());
+                }
+                if(!(tfMonatlichPrice.getText().trim().isEmpty())){
+                    summe=+Double.valueOf(tfMonatlichPrice.getText())*12;
+                }
+                if(!(tfRabatprice.getText().trim().isEmpty())){
+                 summe=summe-(Double.valueOf(tfRabatprice.getText()));
+                }
+                if(!(tfRabatPercent.getText().trim().isEmpty())){
+                 summe=summe-(Double.valueOf(tfRabatPercent.getText())*Double.valueOf(tfSumme.getText())/100);
+
             }
 
         }
-    };
-}
+            tfRestbetrag.setText(String.valueOf(summe));
+            lblSumme.setText(String.valueOf(summe));
+            System.out.println(summe);
+    }
+};
+    }
     private void summeRechnen() {
         tfEinmaligePrice.textProperty().addListener(summeListener());
         tfRabatPercent.textProperty().addListener(summeListener());

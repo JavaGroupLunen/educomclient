@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.ButtonType?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.DatePicker?>
+<?import javafx.scene.control.DialogPane?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+
+<DialogPane contentText="Schuleauswahl" expanded="true" headerText="Schuleauswahl" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="609.0" prefWidth="534.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.educom.restclient.ui.controller.StundenPlanAuswahlFensterController">
+    <header>
+      <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="200.0" prefWidth="320.0">
+         <children>
+            <ComboBox fx:id="cbxLehre" layoutX="117.0" layoutY="37.0" prefHeight="26.0" prefWidth="214.0" />
+            <ComboBox fx:id="cbxKurs" layoutX="117.0" layoutY="74.0" prefHeight="26.0" prefWidth="216.0" />
+            <TextField layoutX="117.0" layoutY="160.0" />
+            <Label layoutX="14.0" layoutY="42.0" text="such mit Lehre" />
+            <Label layoutX="12.0" layoutY="79.0" prefHeight="16.0" prefWidth="102.0" text="Such Kurs" />
+            <Label layoutX="14.0" layoutY="165.0" prefHeight="16.0" prefWidth="82.0" text="Vertrag no" />
+            <Label layoutX="18.0" layoutY="119.0" prefHeight="16.0" prefWidth="100.0" text="Vertrag datum" />
+            <DatePicker layoutX="117.0" layoutY="114.0" prefHeight="26.0" prefWidth="219.0" />
+         </children></AnchorPane>
+    </header>
+    <content>
+      <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="65.0" prefWidth="480.0">
+         <children>
+            <TableView fx:id="tbwSchulerauswahl" prefHeight="361.0" prefWidth="534.0">
+              <columns>
+                <TableColumn fx:id="clmSchulername" prefWidth="192.0" text="Schulername" />
+                  <TableColumn fx:id="clmVorname" prefWidth="192.0" text="Vorname" />
+                <TableColumn fx:id="clmKursname" prefWidth="67.0" text="Kurs" />
+                  <TableColumn fx:id="clmKlasse" prefWidth="107.0" text="Klasse" />
+                  <TableColumn fx:id="clmSchulename" prefWidth="167.0" text="Schule" />
+                  <TableColumn fx:id="clmauswahl" prefWidth="167.0" text="aushahl" />
+              </columns>
+            </TableView>
+         </children></AnchorPane>
+    </content>
+    <expandableContent>
+      <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="200.0" prefWidth="320.0" />
+    </expandableContent>
+   <buttonTypes>
+      <ButtonType fx:constant="APPLY" />
+   </buttonTypes>
+</DialogPane>

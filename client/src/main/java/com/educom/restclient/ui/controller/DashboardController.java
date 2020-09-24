@@ -51,7 +51,11 @@ public class DashboardController implements Initializable {
         loadStage("/vertrag.fxml");
 
     }
+    @FXML
+    private void loadStundenplan(ActionEvent event2) {
+        loadStage("/stundenplan.fxml");
 
+    }
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         loadStage("/login.fxml");
