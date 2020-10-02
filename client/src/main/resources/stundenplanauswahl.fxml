@@ -16,12 +16,12 @@
          <children>
             <ComboBox fx:id="cbxLehre" layoutX="117.0" layoutY="37.0" prefHeight="26.0" prefWidth="214.0" />
             <ComboBox fx:id="cbxKurs" layoutX="117.0" layoutY="74.0" prefHeight="26.0" prefWidth="216.0" />
-            <TextField layoutX="117.0" layoutY="160.0" />
+            <TextField fx:id="tfVertragnum" layoutX="117.0" layoutY="160.0" />
             <Label layoutX="14.0" layoutY="42.0" text="such mit Lehre" />
             <Label layoutX="12.0" layoutY="79.0" prefHeight="16.0" prefWidth="102.0" text="Such Kurs" />
             <Label layoutX="14.0" layoutY="165.0" prefHeight="16.0" prefWidth="82.0" text="Vertrag no" />
             <Label layoutX="18.0" layoutY="119.0" prefHeight="16.0" prefWidth="100.0" text="Vertrag datum" />
-            <DatePicker layoutX="117.0" layoutY="114.0" prefHeight="26.0" prefWidth="219.0" />
+            <DatePicker fx:id="dtpVertragDatum" layoutX="117.0" layoutY="114.0" prefHeight="26.0" prefWidth="219.0" />
          </children></AnchorPane>
     </header>
     <content>

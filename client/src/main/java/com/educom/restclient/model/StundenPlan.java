@@ -14,7 +14,7 @@ public class StundenPlan {
 
     private Kurs kurs;
 
-    private Lehre lehre;
+
     private Boolean vertretung;
 
     private List<StundenPlanDetails> detail;
@@ -68,14 +68,6 @@ public class StundenPlan {
 
     public void setKurs(Kurs kurs) {
         this.kurs = kurs;
-    }
-
-    public Lehre getLehre() {
-        return lehre;
-    }
-
-    public void setLehre(Lehre lehre) {
-        this.lehre = lehre;
     }
 
     public Boolean getVertretung() {

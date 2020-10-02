@@ -122,4 +122,9 @@ public class Kurs  {
     public void setSchulerSet(Set<Schuler> schulerSet) {
         this.schulerSet = schulerSet;
     }
+
+    @Override
+    public String toString() {
+        return name;
+    }
 }

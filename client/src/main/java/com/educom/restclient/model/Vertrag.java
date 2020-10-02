@@ -19,16 +19,17 @@ public class Vertrag implements Serializable {
     private Double summe;
     private Double monatlischeRate;
     private Double restbetrag;
-    private int rabat;
-    private int rabatPercent;
+    private Double rabat;
+    private Double rabatPercent;
 
 
     private Schuler schuler;
 
 
-    public Vertrag(long id, Date vertragsdatum, ZahlungsType zahlungstype, Double einmaligeKosten, Double anmeldegebuhr, Double materialprice, Double summe, Double monatlischeRate, Double restbetrag, int rabat, int rabatPercent, Schuler schuler) {
-        this.id = id;
+    public Vertrag(Date vertragsdatum, LocalDate vertragsbegin, LocalDate vertragsende, ZahlungsType zahlungstype, Double einmaligeKosten, Double anmeldegebuhr, Double materialprice, Double summe, Double monatlischeRate, Double restbetrag, Double rabat, Double rabatPercent, Schuler schuler) {
         this.vertragsdatum = vertragsdatum;
+        this.vertragsbegin = vertragsbegin;
+        this.vertragsende = vertragsende;
         this.zahlungstype = zahlungstype;
         this.einmaligeKosten = einmaligeKosten;
         this.anmeldegebuhr = anmeldegebuhr;
@@ -39,7 +40,6 @@ public class Vertrag implements Serializable {
         this.rabat = rabat;
         this.rabatPercent = rabatPercent;
         this.schuler = schuler;
-
     }
 
     public Vertrag() {
@@ -133,19 +133,19 @@ public class Vertrag implements Serializable {
         this.restbetrag = restbetrag;
     }
 
-    public int getRabat() {
+    public Double getRabat() {
         return rabat;
     }
 
-    public void setRabat(int rabat) {
+    public void setRabat(Double rabat) {
         this.rabat = rabat;
     }
 
-    public int getRabatPercent() {
+    public Double getRabatPercent() {
         return rabatPercent;
     }
 
-    public void setRabatPercent(int rabatPercent) {
+    public void setRabatPercent(Double rabatPercent) {
         this.rabatPercent = rabatPercent;
     }
 

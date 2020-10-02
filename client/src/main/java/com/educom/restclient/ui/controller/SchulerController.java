@@ -58,7 +58,7 @@ public class SchulerController implements Initializable {
     private Long updatedSchulerId;
     private final WebClient webClient = WebClient.builder().build();
     private final RestTemplate restTemplate = new RestTemplate();
-    private SchulerClient schulerClient=new SchulerClient();;
+    private SchulerClient schulerClient=new SchulerClient();
     private ApplicationContext applicationContext;
     @Value("classpath:/lehre.fxml")
     Resource  resource;

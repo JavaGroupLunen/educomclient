@@ -163,9 +163,10 @@ public class VertragContoller implements Initializable {
     String pattern = "dd-MM-yyyy";
     DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern(pattern);
     private UtilDate utildate=new UtilDate<Kurs>();
-
     private ValidationSupport validationSupport = new ValidationSupport();
 
+    private static Double summe=0.0;
+    private static Double monatlischePreise=0.0,einmaligepreise=0.0,materialkosten=0.0,rabatPrice=0.0,rabetPercent=0.0;
 
     @FXML
     void addVertragAction(ActionEvent event) {
@@ -205,11 +206,11 @@ public class VertragContoller implements Initializable {
             neuvertrag.setMonatlischeRate(monatlischePreise);
         }
         if(!(tfRabatprice.getText().trim().isEmpty())){
-            Integer rabat=Integer.valueOf(tfRabatprice.getText());
+            Double rabat=Double.valueOf(tfRabatprice.getText());
             neuvertrag.setRabat(rabat);
         }
         if(!(tfRabatPercent.getText().trim().isEmpty())){
-            Integer rabatPercentes=Integer.valueOf(tfRabatPercent.getText());
+            Double rabatPercentes=Double.valueOf(tfRabatPercent.getText());
             neuvertrag.setRabatPercent(rabatPercentes);
         }
 //        if(!(tfSumme.getText().trim().isEmpty())){
@@ -305,37 +306,24 @@ public class VertragContoller implements Initializable {
 //       vertragsDatei= (ObservableList<Vertrag>) vertragClient.getAllVertrag().stream().collect(Collectors.toList());
 //       tbwVertrag.setItems(vertragsDatei);
 //    }
-private  double summe=0;
+
 
 private ChangeListener<String> summeListener(){
-
     return new ChangeListener<String>() {
         @Override
         public void changed(ObservableValue<? extends String> observable,
                             String oldValue, String newValue) {
-            if (!newValue.trim().isEmpty()) {
-          //  TODO:Düzgün calismiyor
-                if(!(tfEinmaligePrice.getText().trim().isEmpty())){
-                 summe =+Double.valueOf(tfEinmaligePrice.getText());
-                }
-                if(!(tfMaterialkosten.getText().trim().isEmpty())){
-                 summe =+Double.valueOf(tfMaterialkosten.getText());
-                }
-                if(!(tfMonatlichPrice.getText().trim().isEmpty())){
-                    summe=+Double.valueOf(tfMonatlichPrice.getText())*12;
-                }
-                if(!(tfRabatprice.getText().trim().isEmpty())){
-                 summe=summe-(Double.valueOf(tfRabatprice.getText()));
-                }
-                if(!(tfRabatPercent.getText().trim().isEmpty())){
-                 summe=summe-(Double.valueOf(tfRabatPercent.getText())*Double.valueOf(tfSumme.getText())/100);
+            if (!newValue.trim().isEmpty()) {          //  TODO:Düzgün calismiyor
+                getFieldValue();
+                    if(rabatPrice!=0){
+                        summe=monatlischePreise*12+einmaligepreise+materialkosten-rabatPrice-((rabetPercent)*summe/100);
+                    }
+                summe =monatlischePreise*12+einmaligepreise+materialkosten-rabatPrice;
+                tfRestbetrag.setText(String.valueOf(summe));
+                lblSumme.setText(String.valueOf(summe));
+                System.out.println(summe);
+              }
 
-            }
-
-        }
-            tfRestbetrag.setText(String.valueOf(summe));
-            lblSumme.setText(String.valueOf(summe));
-            System.out.println(summe);
     }
 };
     }
@@ -344,6 +332,15 @@ private ChangeListener<String> summeListener(){
         tfRabatPercent.textProperty().addListener(summeListener());
         tfMonatlichPrice.textProperty().addListener(summeListener());
         tfMaterialkosten.textProperty().addListener(summeListener());
+        tfRestbetrag.textProperty().addListener(summeListener());
+    }
+
+    private void getFieldValue(){
+        if(!(tfMonatlichPrice.getText().trim().isEmpty())){ monatlischePreise =Double.valueOf(tfMonatlichPrice.getText());}
+        if(!(tfEinmaligePrice.getText().trim().isEmpty())){ einmaligepreise= Double.valueOf(tfEinmaligePrice.getText());}
+        if(!(tfMaterialkosten.getText().trim().isEmpty())){ materialkosten= Double.valueOf(tfMaterialkosten.getText());}
+        if(!(tfRabatprice.getText().trim().isEmpty())){  rabatPrice= Double.valueOf(tfRabatprice.getText());}
+        if(!(tfRabatPercent.getText().trim().isEmpty())){ rabetPercent=(Double.valueOf(tfRabatPercent.getText()));}
     }
 
     public void setMessage(Label l, String message, Color color){

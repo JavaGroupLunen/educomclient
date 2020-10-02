@@ -6,6 +6,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.layout.AnchorPane;
+import javafx.stage.Stage;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
@@ -58,12 +59,44 @@ public class DashboardController implements Initializable {
     }
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        loadStage("/login.fxml");
+        loadStage("/loginform.fxml");
     }
     @FXML
-    private void singoutHandle() throws IOException, URISyntaxException {
-        //Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-        System.exit(0);
-
+    private void singoutHandle(ActionEvent event) throws IOException, URISyntaxException {
+       // Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        //System.exit(0);
+        getStage().close();
     }
+
+    private Stage getStage() {
+        return (Stage) rootPane.getScene().getWindow();
+    }
+
+//    private void initDrawer() {
+//        try {
+//            FXMLLoader loader = new FXMLLoader(getClass().getResource("/library/assistant/ui/main/toolbar/toolbar.fxml"));
+//            VBox toolbar = loader.load();
+//            drawer.setSidePane(toolbar);
+//            ToolbarController controller = loader.getController();
+//            controller.setBookReturnCallback(this);
+//        } catch (IOException ex) {
+//            Logger.getLogger(MainController.class.getName()).log(Level.SEVERE, null, ex);
+//        }
+//        HamburgerSlideCloseTransition task = new HamburgerSlideCloseTransition(hamburger);
+//        task.setRate(-1);
+//        hamburger.addEventHandler(MouseEvent.MOUSE_CLICKED, (Event event) -> {
+//            drawer.toggle();
+//        });
+//        drawer.setOnDrawerOpening((event) -> {
+//            task.setRate(task.getRate() * -1);
+//            task.play();
+//            drawer.toFront();
+//        });
+//        drawer.setOnDrawerClosed((event) -> {
+//            drawer.toBack();
+//            task.setRate(task.getRate() * -1);
+//            task.play();
+//        });
+//    }
+
 }
